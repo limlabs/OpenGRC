@@ -1,0 +1,61 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+@import '/vendor/awcodes/filament-table-repeater/resources/css/plugin.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC:wght@400;700&display=swap');
+
+@config 'tailwind.config.js';
+
+@layer components {
+
+    .text-grcblue-800 {
+        color: #374151 !important;
+    }
+
+    .text-grcblue-400 {
+        color: #1375a0 !important;
+    }
+
+    .bg-grcblue-800 {
+        background-color: #374151 !important;
+    }
+
+    .bg-grcblue-400 {
+        background-color: #1375a0 !important;
+    }
+
+}
+
+
+
+
+/* Sidebar Styles */
+.fi-sidebar {
+    @apply bg-grcblue-800 dark:bg-gray-900 !important;
+}
+
+.fi-sidebar-item-label {
+    @apply text-gray-100 !important;
+}
+
+li.fi-sidebar-item.fi-active > a {
+    @apply bg-grcblue-400 !important;
+}
+
+.fi-sidebar-item > a:hover {
+    @apply bg-primary-600 text-black transition-colors duration-200;
+}
+
+.fi-sidebar-group-label {
+    @apply text-gray-300 !important;
+}
+
+/* Form Label */
+div.flex.items-center.gap-x-3.justify-between > dt > span {
+    @apply text-grcblue-800 dark:text-grcblue-400 !important;
+    font-weight: bold;
+}
+
+a.fi-logo {
+    font-family: 'Bruno Ace SC', sans-serif;
+}
+
