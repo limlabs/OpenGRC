@@ -31,7 +31,7 @@ OpenGRC Documentation can be found at https://docs.opengrc.com.
 Thank you for considering contributing to OpenGRC! The contribution guide will be released in the docs soon.
 
 ## Code of Conduct
-The OpenGRC code of conduct is derived from the Laravel and Ruby codes of conduct. Any violations of the code of conduct may be reported to Lee Mangold (lee@mangoldsecurity.com):
+The OpenGRC code of conduct is derived from the Laravel and Ruby codes of conduct. Any violations of the code of conduct may be reported to Lee Mangold (lee@opengrc.com):
 
 - Participants will be tolerant of opposing views.
 - Participants must ensure that their language and actions are free of personal attacks and disparaging personal remarks.
@@ -40,7 +40,7 @@ The OpenGRC code of conduct is derived from the Laravel and Ruby codes of conduc
 
 ## Security Vulnerabilities
 
-If you believe you have found a security vulnerability in OpenGRC, please report it to us as described in our [Security Policy](/security/).
+If you believe you have found a security vulnerability in OpenGRC, please report it to Lee Mangold (lee@opengrc.com).
 
 ## License
 
