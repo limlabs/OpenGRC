@@ -1,4 +1,4 @@
-<p style="text-align: center;">
+<p style="text-align: center;" align="center">
   <img src="https://github.com/LeeMangold/opengrc-docs/blob/main/docs/img/logo-256.png?raw=true" alt="OpenGRC Logo" />
 </p>
 
