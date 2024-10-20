@@ -50,6 +50,13 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
+                //Roles
+                Tables\Columns\TextColumn::make('roles')
+                    ->searchable()
+                    ->label('Roles')
+                    ->badge()
+                    ->sortable()
+                    ->state(fn ($record) => $record->roles->pluck('name')->join(', ')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
