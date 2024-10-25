@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserCreatedMail extends Mailable
+class UserForceResetMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -37,7 +37,7 @@ class UserCreatedMail extends Mailable
         return new Envelope(
             from: 'no-reply@opengrc.com',
             to: $this->email,
-            subject: 'Welcome to OpenGRC',
+            subject: 'OpenGRC Password Reset',
         );
     }
 
@@ -47,7 +47,7 @@ class UserCreatedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.user_created', // Your email Blade template
+            view: 'emails.user_force_reset', // Your email Blade template
             with: [
                 'url' => $this->url,
                 'name' => $this->name,

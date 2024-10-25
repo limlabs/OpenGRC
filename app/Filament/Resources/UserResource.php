@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
-use App\Mail\UserCreatedMail;
+use App\Mail\UserForceResetMail;
 use App\Models\User;
 use Faker\Factory;
 use Filament\Forms;
@@ -90,7 +90,7 @@ class UserResource extends Resource
                             $record->save();
 
                             // Send the email with the password to the user
-                            Mail::to($record->email)->send(new UserCreatedMail($record->email, $record->name, $password));
+                            Mail::to($record->email)->send(new UserForceResetMail($record->email, $record->name, $password));
 
                             Notification::make()
                                 ->title('Password reset forced for user')

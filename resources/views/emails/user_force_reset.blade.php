@@ -4,10 +4,10 @@
     <title>Account Created</title>
 </head>
 <body>
-<h1>Welcome to OpenGRC!</h1>
+<h1>OpenGRC Password Reset</h1>
 <p>Hello, {{ $name }}!</p>
-<p>An OpenGRC account has been created for you. You may your account using the credentials provided below.</p>
-<p>Your login details are:</p>
+<p>An administrator has performed a password reset on your account. </p>
+<p>Your temporary login details are:</p>
 <ul>
     <li><strong>URL:</strong> {{ $url }}</li>
     <li><strong>Email:</strong> {{ $email }}</li>
