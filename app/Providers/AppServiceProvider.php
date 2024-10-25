@@ -2,15 +2,15 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\CheckPasswordReset;
 use App\Models\User;
-use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Gate;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -63,15 +63,6 @@ class AppServiceProvider extends ServiceProvider
                 950 => '69, 10, 10',
             ],
         ]);
-
-
-//        CreateAction::configureUsing(function ($action) {
-//            return $action->slideOver();
-//        });
-//
-//        EditAction::configureUsing(function ($action) {
-//            return $action->slideOver();
-//        });
 
     }
 }

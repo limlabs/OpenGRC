@@ -4,21 +4,26 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Mail\UserCreatedMail;
 use App\Models\User;
+use Faker\Factory;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationGroup = 'Settings';
+    protected static ?int $navigationSort = 10;
 
     public static function form(Form $form): Form
     {
@@ -56,7 +61,7 @@ class UserResource extends Resource
                     ->label('Roles')
                     ->badge()
                     ->sortable()
-                    ->state(fn ($record) => $record->roles->pluck('name')->join(', ')),
+                    ->state(fn($record) => $record->roles->pluck('name')->join(', ')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -72,6 +77,30 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                    Tables\Actions\Action::make('reset_password')
+                        ->label('Force Password Reset')
+                        ->action(function (User $record): void {
+                            $password = UserResource::createDefaultPassword();
+                            $record->password_reset_required = true;
+                            $record->password = bcrypt($password);
+                            $record->save();
+
+                            // Send the email with the password to the user
+                            Mail::to($record->email)->send(new UserCreatedMail($record->email, $record->name, $password));
+
+                            Notification::make()
+                                ->title('Password reset forced for user')
+                                ->warning()
+                                ->send();
+                        })
+                        ->requiresConfirmation()
+                        ->icon('heroicon-o-key')
+                        ->color('warning'),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -106,4 +135,10 @@ class UserResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
+
+    public static function createDefaultPassword(): string
+    {
+        return Str::replace(' ', '-', implode(' ', Factory::create('en_US')->words(4)));
+    }
+
 }
