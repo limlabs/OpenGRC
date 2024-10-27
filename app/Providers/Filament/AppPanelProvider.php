@@ -19,6 +19,8 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
+use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
+
 
 //use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
 
@@ -47,13 +49,10 @@ class AppPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->plugins([
-                FilamentGeneralSettingsPlugin::make()
-                    ->canAccess(fn() => auth()->user()->can('Manage Preferences'))
-                    ->setSort(3)
-                    ->setIcon('heroicon-o-cog')
-                    ->setNavigationGroup('Settings')
-                    ->setTitle('General Settings')
-                    ->setNavigationLabel('General Settings'),
+                FilamentSettingsPlugin::make()
+                    ->pages([
+                        \App\Filament\Pages\Settings\Settings::class,
+                    ]),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,

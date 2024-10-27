@@ -52,10 +52,18 @@ class ListUsers extends ListRecords
                     $user->syncRoles([$roleId]);
 
                     // Send the email with the password to the user
-                    Mail::to($data['email'])->send(new UserCreatedMail($data['email'], $data['name'], $password));
+                    try {
+                        Mail::to($data['email'])->send(new UserCreatedMail($data['email'], $data['name'], $password));
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Failed to send invitation email. User still created.' . $e->getMessage())
+                            ->warning()
+                            ->send();
+                        return;
+                    }
 
                     Notification::make()
-                        ->title('User created successfully!')
+                        ->title('User created and invitation sent!')
                         ->success()
                         ->send();
 

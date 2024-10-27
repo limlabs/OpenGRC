@@ -26,7 +26,7 @@ class UserCreatedMail extends Mailable
         $this->email = $email;
         $this->name = $name;
         $this->password = $password;
-        $this->url = env('APP_URL');
+        $this->url = setting('general.url');
     }
 
     /**
@@ -35,7 +35,7 @@ class UserCreatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: 'no-reply@opengrc.com',
+            from: setting('mail.from'),
             to: $this->email,
             subject: 'Welcome to OpenGRC',
         );
