@@ -4,10 +4,8 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Blade;
 
 class UserForceResetMail extends Mailable
 {
@@ -30,40 +28,22 @@ class UserForceResetMail extends Mailable
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
      */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            from: setting('mail.from'),
-            to: $this->email,
-            subject: 'OpenGRC Password Reset',
-        );
-    }
+        $viewString = setting('mail.templates.password_reset_body');
 
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.user_force_reset', // Your email Blade template
-            with: [
-                'url' => $this->url,
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => $this->password,
-            ],
-        );
-    }
+        $renderedView = Blade::render($viewString, [
+            'url' => $this->url,
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password,
+        ]);
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->from(setting('mail.from'))
+            ->to($this->email)
+            ->subject(setting('mail.templates.password_reset_subject'))
+            ->html($renderedView);
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Filament\Pages\Settings;
 
 use Closure;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Filters\SelectFilter;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
@@ -72,6 +74,22 @@ class Settings extends BaseSettings
                                 ->email()
                                 ->helperText('The email address to send emails from'),
                         ]),
+                    Tabs\Tab::make('Mail Templates')
+                    ->schema([
+                        TextInput::make('mail.templates.password_reset_subject')
+                            ->label('Password Reset Subject')
+                            ->columnSpanFull(),
+                        RichEditor::make('mail.templates.password_reset_body')
+                            ->label('Password Reset Body')
+                            ->columnSpanFull(),
+                        TextInput::make('mail.templates.new_account_subject')
+                            ->label('New Account Subject')
+                            ->columnSpanFull(),
+                        RichEditor::make('mail.templates.new_account_body')
+                            ->label('New Account Body')
+                            ->columnSpanFull(),
+
+                    ])
                 ]),
         ];
     }
