@@ -4,10 +4,8 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Blade;
 
 class UserCreatedMail extends Mailable
 {
@@ -29,41 +27,25 @@ class UserCreatedMail extends Mailable
         $this->url = setting('general.url');
     }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            from: setting('mail.from'),
-            to: $this->email,
-            subject: 'Welcome to OpenGRC',
-        );
-    }
 
     /**
-     * Get the message content definition.
+     * Build the message.
      */
-    public function content(): Content
+    public function build()
     {
-        return new Content(
-            view: 'emails.user_created', // Your email Blade template
-            with: [
-                'url' => $this->url,
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => $this->password,
-            ],
-        );
+        $viewString = setting('mail.templates.new_user_body');
+
+        $renderedView = Blade::render($viewString, [
+            'url' => $this->url,
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password,
+        ]);
+
+        return $this->from(setting('mail.from'))
+            ->to($this->email)
+            ->subject(setting('mail.templates.new_user_subject'))
+            ->html($renderedView);
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
 }

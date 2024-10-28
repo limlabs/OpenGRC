@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Schema;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -23,24 +24,28 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
         URL::forceScheme('https');
 
+        //if table "settings" exists
+        if (Schema::hasTable('settings')) {
 
-        Config::set('app.name', setting('general.name', 'OpenGRC'));
-        Config::set('app.url', setting('general.url', 'https://localhost'));
+
+            Config::set('app.name', setting('general.name', 'OpenGRC'));
+            Config::set('app.url', setting('general.url', 'https://localhost'));
 
 
-        config()->set('mail', array_merge(config('mail'), [
-            'driver' => 'smtp',
-            'transport' => "smtp",
-            'host' => setting('mail.host'),
-            'username' => setting('mail.username'),
-            'password' => setting('mail.password'),
-            'encryption' => setting('mail.encryption'),
-            'port' => setting('mail.port'),
-            'from' => [
-                'address' => setting('mail.from'),
-                'name' => setting('general.name'),
-            ]
-        ]));
+            config()->set('mail', array_merge(config('mail'), [
+                'driver' => 'smtp',
+                'transport' => "smtp",
+                'host' => setting('mail.host'),
+                'username' => setting('mail.username'),
+                'password' => setting('mail.password'),
+                'encryption' => setting('mail.encryption'),
+                'port' => setting('mail.port'),
+                'from' => [
+                    'address' => setting('mail.from'),
+                    'name' => setting('general.name'),
+                ]
+            ]));
+        }
 
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true : null;
