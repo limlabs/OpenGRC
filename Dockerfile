@@ -19,12 +19,11 @@ EXPOSE 80
 ENV DB_CONNECTION=sqlite \
     DB_HOST=localhost \
     DB_PORT= \
-    DB_DATABASE=/var/www/html/storage/database.sqlite \
+    DB_DATABASE=/var/www/html/storage/opengrc.sqlite \
     DB_USERNAME= \
     DB_PASSWORD=
 
 RUN cp .env.example .env && \
-    echo "DB_CONNECTION=${DB_CONNECTION}" >> .env && \
     echo "DB_CONNECTION=${DB_CONNECTION}" >> .env && \
     echo "DB_HOST=${DB_HOST}" >> .env && \
     echo "DB_PORT=${DB_PORT}" >> .env && \
@@ -33,7 +32,7 @@ RUN cp .env.example .env && \
     echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
 
 RUN git config --global --add safe.directory /var/www/html
-RUN touch /var/www/html/storage/database.sqlite
+RUN touch /var/www/html/storage/opengrc.sqlite
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN php artisan key:generate
 RUN php artisan migrate
