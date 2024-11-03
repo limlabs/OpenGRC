@@ -22,7 +22,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Disable mass assignment protection
         Model::unguard();
-        URL::forceScheme('https');
+        if (!$this->app->environment('local')) {
+            URL::forceScheme('https');
+        }
 
         //if table "settings" exists
         if (Schema::hasTable('settings')) {
