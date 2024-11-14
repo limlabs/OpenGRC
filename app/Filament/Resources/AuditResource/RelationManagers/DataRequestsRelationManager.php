@@ -110,27 +110,27 @@ class DataRequestsRelationManager extends RelationManager
                             ->content(function ($record) {
                                 return new HtmlString($record->auditItem->auditable->description);
                             }),
-                        Repeater::make('responses')
-                            ->label('Responses')
-                            ->relationship('responses')
-                            ->addable(false)
-                            ->columns(2)
-                            ->schema([
-                                Select::make('requestee')
-                                    ->label('Assigned To')
-                                    ->relationship('requestee', 'name')
-                                    ->required(),
-                                Select::make('status')
-                                    ->label('Status')
-                                    ->options(ResponseStatus::class)
-                                    ->default(ResponseStatus::PENDING)
-                                    ->required(),
-                                Placeholder::make('response')
-                                    ->content(function ($record) {
-                                        return new HtmlString($record->response);
-                                    })
-                                    ->label('Response'),
-                            ]),
+//                        Repeater::make('responses')
+//                            ->label('Responses')
+//                            ->relationship('responses')
+//                            ->addable(false)
+//                            ->columns(2)
+//                            ->schema([
+//                                Select::make('requestee')
+//                                    ->label('Assigned To')
+//                                    ->relationship('requestee', 'name')
+//                                    ->required(),
+//                                Select::make('status')
+//                                    ->label('Status')
+//                                    ->options(ResponseStatus::class)
+//                                    ->default(ResponseStatus::PENDING)
+//                                    ->required(),
+//                                Placeholder::make('response')
+//                                    ->content(function ($record) {
+//                                        return new HtmlString($record ? $record->response : '');
+//                                    })
+//                                    ->label('Response'),
+//                            ]),
                     ]),
             ]);
     }

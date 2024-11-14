@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AuditItemResource\Pages;
 
 use App\Enums\Applicability;
 use App\Enums\Effectiveness;
+use App\Enums\ResponseStatus;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditItemResource;
 use App\Filament\Resources\DataRequestResource;
@@ -46,7 +47,7 @@ class EditAuditItem extends EditRecord
                     $dataRequest = new DataRequest();
                     $dataRequest->audit_item_id = $this->record->id;
                     $dataRequest->audit_id = $this->record->audit->id;
-                    $dataRequest->status = WorkflowStatus::NOTSTARTED;
+                    $dataRequest->status = ResponseStatus::PENDING;
                     $dataRequest->created_by_id = auth()->id();
                     $dataRequest->assigned_to_id = $data['user_id'];
                     $dataRequest->details = $data['details'];
@@ -65,7 +66,7 @@ class EditAuditItem extends EditRecord
                 ->form([
                     Forms\Components\Select::make('user_id')
                         ->label('Assigned To')
-                        ->options(User::pluck('name', 'id')->toArray())
+                        ->options(User::pluck('name', 'id'))
                         ->searchable(),
                     Forms\Components\Textarea::make('details')
                         ->label('Request Details')

@@ -1,6 +1,7 @@
 <?php
 namespace App\Filament\Pages;
 
+use App\Enums\ResponseStatus;
 use Filament\Pages\Page;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -28,6 +29,17 @@ class ToDo extends Page implements Tables\Contracts\HasTable
             TextColumn::make('dataRequest.audit.title')->label('Audit'),
             TextColumn::make('dataRequest.details')->label('Requested Information')->html()->limit(100),
             TextColumn::make('status')->label('Status'),
+        ];
+    }
+
+    protected function getTableFilters(): array
+    {
+        return [
+            Tables\Filters\SelectFilter::make('status')
+                ->label('Show Responded')
+                ->multiple()
+                ->options(ResponseStatus::class)
+                ->default(['Pending', 'Rejected']),
         ];
     }
 

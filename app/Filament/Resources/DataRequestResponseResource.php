@@ -90,7 +90,9 @@ class DataRequestResponseResource extends Resource
                     ->label('Status'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(ResponseStatus::class)
+                    ->label('Status'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
