@@ -7,7 +7,6 @@ use App\Filament\Resources\AuditResource;
 use App\Filament\Resources\AuditResource\Components\DataRequestFilesTable;
 use App\Http\Controllers\ReportController;
 use App\Models\Audit;
-use App\Models\DataRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions;
 use Filament\Actions\Action;
