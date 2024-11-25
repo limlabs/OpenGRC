@@ -2,18 +2,17 @@
 
 namespace App\Filament\Resources\AuditResource\RelationManagers;
 
-use App\Enums\WorkflowStatus;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class AttachmentsRelationManager extends RelationManager
 {
@@ -71,7 +70,43 @@ class AttachmentsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                //
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('DownloadDraftReport')
+                        ->label('Download Draft Report')
+                        ->icon('heroicon-o-document')
+                        ->action(function ($record) {
+                            $audit = $this->getOwnerRecord();
+                            $auditItems = $audit->auditItems;
+                            $reportTemplate = "reports.audit";
+                            if ($audit->audit_type == "implementations")
+                                $reportTemplate = "reports.implementation-report";
+                            $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
+                            return response()->streamDownload(
+                                fn() => print($pdf->stream()),
+                                "DRAFT-AuditReport-{$audit->id}.pdf");
+                        }),
+                    //Button to download final report
+                    Tables\Actions\Action::make('DownloadReport')
+                        ->label('Download Final Report')
+                        ->icon('heroicon-o-document')
+                        ->action(function ($record) {
+                            $audit = $this->getOwnerRecord();
+                            $filepath = "app/private/audit_reports/AuditReport-{$audit->id}.pdf";
+                            if (file_exists(storage_path($filepath)) && is_readable(storage_path($filepath))) {
+                                return response()->download(storage_path($filepath));
+                            } else {
+                                //If the final audit report is not available, show an error message
+                                return Notification::make()
+                                    ->title('Error')
+                                    ->body('The final audit report is not available until the audit has been completed.')
+                                    ->danger()
+                                    ->send();
+                            }
+                        }),
+
+                ])
+                    ->label('Report Downloads')
+                ,
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

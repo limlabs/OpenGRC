@@ -4,13 +4,12 @@ namespace App\Filament\Resources\AuditResource\Pages;
 
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource;
-use App\Filament\Resources\AuditResource\Components\DataRequestFilesTable;
-use App\Http\Controllers\ReportController;
 use App\Models\Audit;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\ActionSize;
 
@@ -118,8 +117,12 @@ class ViewAudit extends ViewRecord
                     })
                     ->action(function (Audit $record, $livewire) {
 
+
                         foreach ($record->auditItems as $auditItem) {
+                            // If the audit item is not completed, mark it as completed
                             $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
+
+                            // If the audit item is an implementation, update the effectiveness
                             $auditItem->implementation()->update(['effectiveness' => $auditItem->effectiveness]);
                         }
 
@@ -132,6 +135,7 @@ class ViewAudit extends ViewRecord
                         $pdf = Pdf::loadView($reportTemplate, ['audit' => $record, 'auditItems' => $auditItems]);
                         $pdf->save(storage_path($filepath));
 
+                        // Mark the audit as completed
                         $record->update(['status' => WorkflowStatus::COMPLETED]);
                         $livewire->redirectRoute('filament.app.resources.audits.view', $record);
                     }),
@@ -144,7 +148,7 @@ class ViewAudit extends ViewRecord
             ,
             ActionGroup::make([
                 Action::make('ReportsButton')
-                    ->label('Audit Report')
+                    ->label('Download Audit Report')
                     ->size(ActionSize::Small)
                     ->color('primary')
                     ->disabled($record->status == WorkflowStatus::NOTSTARTED)
@@ -154,7 +158,11 @@ class ViewAudit extends ViewRecord
                             if (file_exists(storage_path($filepath)) && is_readable(storage_path($filepath))) {
                                 return response()->download(storage_path($filepath));
                             } else {
-                                return redirect()->back()->with('error', 'The audit report is not available.');
+                                return Notification::make()
+                                    ->title('Error')
+                                    ->body('The final audit report is not available until the audit has been completed.')
+                                    ->danger()
+                                    ->send();
                             }
                         } else {
                             $auditItems = $audit->auditItems;
@@ -164,7 +172,7 @@ class ViewAudit extends ViewRecord
                             $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
                             return response()->streamDownload(
                                 fn() => print($pdf->stream()),
-                                "AuditReport-{$audit->id}.pdf");
+                                "DRAFT-AuditReport-{$audit->id}.pdf");
                         }
                     }
                     )
