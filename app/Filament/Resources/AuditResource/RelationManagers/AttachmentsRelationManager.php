@@ -7,11 +7,13 @@ use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AttachmentsRelationManager extends RelationManager
 {
@@ -22,16 +24,19 @@ class AttachmentsRelationManager extends RelationManager
 
         return $form
             ->schema([
+                TextArea::make('description')
+                    ->label('Description')
+                    ->columnSpanFull()
+                    ->required(),
                 FileUpload::make('file_path')
+                    ->downloadable(true)
+                    ->columnSpanFull()
                     ->label('File')
                     ->required()
                     ->multiple()
                     ->disk('private')
                     ->directory('attachments')
                     ->storeFileNamesIn('attachment_file_names'),
-                TextInput::make('description')
-                    ->label('Description')
-                    ->required(),
                 DateTimePicker::make('uploaded_at')
                     ->label('Uploaded At')
                     ->default(now())
@@ -51,12 +56,9 @@ class AttachmentsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->description('Note: This table is not functional in the current release. This will be addressed in a future release. ')
-            ->recordTitleAttribute('description')
             ->columns([
+                Tables\Columns\TextColumn::make('file_name')->label("File Name"),
                 Tables\Columns\TextColumn::make('description')->html()->limit(100)->wrap(),
-                Tables\Columns\TextColumn::make('file_path')->label("File Name")
-                    ->getStateUsing(fn($record) => basename($record->file_path)),
                 Tables\Columns\TextColumn::make('created_at')->label('Uploaded At'),
                 Tables\Columns\TextColumn::make('uploaded_by')
                     ->label('Uploaded By')
@@ -69,19 +71,13 @@ class AttachmentsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->disabled(function () {
-                        return $this->getOwnerRecord()->status != WorkflowStatus::INPROGRESS;
-                    }),
+                //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\ViewAction::make()
+                    ->label('View')
+                    ->icon('heroicon-o-eye'),
             ]);
     }
+
 }
