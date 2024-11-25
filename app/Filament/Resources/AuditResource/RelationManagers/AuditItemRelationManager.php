@@ -172,15 +172,13 @@ class AuditItemRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('type')
                     ->getStateUsing(function ($record) {
                         return class_basename($record->auditable);
-                    })
-                    ->sortable(),
+                    }),
                 Tables\Columns\TextColumn::make('code')
                     ->getStateUsing(function ($record) {
                         return class_basename($record->auditable->code);
                     })
-                    ->label("Code")
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('title')->sortable()
+                    ->label("Code"),
+                Tables\Columns\TextColumn::make('title')
                     ->wrap()
                     ->getStateUsing(function ($record) {
                         return class_basename($record->auditable->title);
