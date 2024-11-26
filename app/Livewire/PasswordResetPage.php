@@ -15,6 +15,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Component;
+use Livewire\Features\SupportRedirects\Redirector;
 use Session;
 
 class PasswordResetPage extends Component implements HasActions, HasForms
@@ -24,8 +25,6 @@ class PasswordResetPage extends Component implements HasActions, HasForms
     public ?array $data = [];
 
     public User $user;
-
-    protected Form $form;
 
     public function mount(): void
     {
@@ -56,7 +55,7 @@ class PasswordResetPage extends Component implements HasActions, HasForms
             ->model(User::class);
     }
 
-    public function create(): RedirectResponse
+    public function create(): RedirectResponse|Redirector
     {
         $data = $this->form->getState();
         $user = auth()->user();

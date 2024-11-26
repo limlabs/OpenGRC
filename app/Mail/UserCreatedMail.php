@@ -35,7 +35,7 @@ class UserCreatedMail extends Mailable
      */
     public function build()
     {
-        $viewString = setting('mail.templates.new_user_body');
+        $viewString = setting('mail.templates.new_account_body');
 
         $renderedView = Blade::render($viewString, [
             'url' => $this->url,
@@ -46,7 +46,7 @@ class UserCreatedMail extends Mailable
 
         return $this->from(setting('mail.from'))
             ->to($this->email)
-            ->subject(setting('mail.templates.new_user_subject'))
+            ->subject(setting('mail.templates.new_account_subject'))
             ->html($renderedView);
     }
 }
