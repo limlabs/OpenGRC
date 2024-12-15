@@ -20,7 +20,7 @@ class ControlsRelationManager extends RelationManager
                     ->sortable()
                     ->searchable()
                     ->wrap(),
-                Tables\Columns\TextColumn::make('control.standard.code')
+                Tables\Columns\TextColumn::make('standard.name')
                     ->sortable()
                     ->searchable()
                     ->wrap(),
