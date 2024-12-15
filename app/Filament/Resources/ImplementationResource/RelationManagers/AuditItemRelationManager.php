@@ -10,7 +10,7 @@ use Filament\Tables\Table;
 
 class AuditItemRelationManager extends RelationManager
 {
-    protected static string $relationship = 'AuditItems';
+    protected static string $relationship = 'auditItems';
 
     //set table name as Audit Results
     public static ?string $title = 'Audit History';

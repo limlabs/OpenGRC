@@ -104,17 +104,20 @@ class Implementation extends Model
     /**
      * Get the audit items for the implementation.
      */
-    public function auditItems(): HasMany
+    public function auditItems(): MorphMany
     {
-        return $this->hasMany(AuditItem::class);
+        return $this->morphMany(AuditItem::class, 'auditable')
+            ->where('auditable_type', '=', 'App\Models\Implementation');
     }
 
     /**
      * Get the completed audit items for the implementation.
      */
-    public function completedAuditItems(): HasMany
+    public function completedAuditItems(): MorphMany
     {
-        return $this->hasMany(AuditItem::class)->where('status', '=', 'Completed');
+        return $this->morphMany(AuditItem::class, 'auditable')
+            ->where('status', '=', 'Completed')
+            ->where('auditable_type', '=', 'App\Models\Implementation');
     }
 
     /**
@@ -130,14 +133,7 @@ class Implementation extends Model
      */
     public function getEffectivenessDate(): string
     {
-        return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('updated_at')->last() : '';
+        return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('updated_at')->last()->format('M d, Y') : '';
     }
 
-    /**
-     * Get all the audit items for the implementation.
-     */
-    public function audits(): MorphMany
-    {
-        return $this->morphMany(AuditItem::class, 'auditable');
-    }
 }

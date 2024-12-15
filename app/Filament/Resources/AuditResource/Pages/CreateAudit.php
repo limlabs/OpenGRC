@@ -71,7 +71,6 @@ class CreateAudit extends CreateRecord
                 ->schema([
                     TextInput::make('title')
                         ->hint('Give the audit a distinctive title.')
-                        ->default('My Title Here - DELETE ME')
                         ->required()
                         ->columns(1)
                         ->placeholder('2023 SOC 2 Type II Audit')

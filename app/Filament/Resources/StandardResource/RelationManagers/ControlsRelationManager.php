@@ -60,7 +60,7 @@ class ControlsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label('Add New Control'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

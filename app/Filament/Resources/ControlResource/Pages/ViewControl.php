@@ -16,4 +16,9 @@ class ViewControl extends ViewRecord
             Actions\EditAction::make(),
         ];
     }
+
+    public function getTitle(): string
+    {
+        return 'Control';
+    }
 }

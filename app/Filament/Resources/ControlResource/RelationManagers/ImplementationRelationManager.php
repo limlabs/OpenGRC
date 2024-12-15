@@ -65,7 +65,25 @@ class ImplementationRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('effectiveness'),
+                Tables\Columns\TextColumn::make('effectiveness')
+                    ->getStateUsing(fn ($record) => $record->getEffectiveness())
+                    ->sortable(true,
+                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
+                            $q->orderBy('effectiveness', $direction);
+                        })
+                    )
+                    ->badge()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('last_assessed')
+                    ->label('Last Audit')
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate())
+                    ->sortable(true,
+                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
+                            $q->orderBy('effectiveness', $direction);
+                        })
+                    )
+                    ->badge()
+                    ->searchable(),
             ])
             ->filters([
                 SelectFilter::make('status')->options(ImplementationStatus::class),

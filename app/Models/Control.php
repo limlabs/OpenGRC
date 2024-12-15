@@ -112,9 +112,9 @@ class Control extends Model
     /**
      * Get the audit items for the control.
      */
-    public function auditItems(): HasMany
+    public function auditItems(): MorphMany
     {
-        return $this->hasMany(AuditItem::class);
+        return $this->morphMany(AuditItem::class, 'auditable');
     }
 
     /**

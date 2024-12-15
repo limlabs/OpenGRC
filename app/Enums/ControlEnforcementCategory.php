@@ -7,48 +7,48 @@ use Filament\Support\Contracts\HasLabel;
 
 enum ControlEnforcementCategory: string implements hasColor, hasLabel
 {
-    case PREVENTATIVE = 'Mandatory';
-    case DETECTIVE = 'Addressable';
-    case CORRECTIVE = 'Optional';
-    case UNKNOWN = 'Other';
+    case MANDATORY = 'Mandatory';
+    case ADDRESSABLE = 'Addressable';
+    case OPTIONAL = 'Optional';
+    case OTHER = 'Other';
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::PREVENTATIVE => 'Mandatory',
-            self::DETECTIVE => 'Addressable',
-            self::CORRECTIVE => 'Optional',
-            self::UNKNOWN => 'Other',
+            self::MANDATORY => 'Mandatory',
+            self::ADDRESSABLE => 'Addressable',
+            self::OPTIONAL => 'Optional',
+            self::OTHER => 'Other',
         };
     }
 
     public function getColor(): array|string|null
     {
         return match ($this) {
-            self::PREVENTATIVE => 'primary',
-            self::DETECTIVE => 'primary',
-            self::CORRECTIVE => 'primary',
-            self::UNKNOWN => 'primary',
+            self::MANDATORY => 'danger',
+            self::ADDRESSABLE => 'warning',
+            self::OPTIONAL => 'primary',
+            self::OTHER => 'primary',
         };
     }
 
     public function getIcon(): string
     {
         return match ($this) {
-            self::PREVENTATIVE => 'fas fa-lock',
-            self::DETECTIVE => 'fas fa-search',
-            self::CORRECTIVE => 'fas fa-wrench',
-            self::UNKNOWN => 'fas fa-question',
+            self::MANDATORY => 'fas fa-lock',
+            self::ADDRESSABLE => 'fas fa-search',
+            self::OPTIONAL => 'fas fa-wrench',
+            self::OTHER => 'fas fa-question',
         };
     }
 
     public function getIconColor(): string
     {
         return match ($this) {
-            self::PREVENTATIVE => 'text-primary',
-            self::DETECTIVE => 'text-primary',
-            self::CORRECTIVE => 'text-primary',
-            self::UNKNOWN => 'text-primary',
+            self::MANDATORY => 'text-danger',
+            self::ADDRESSABLE => 'text-warning',
+            self::OPTIONAL => 'text-primary',
+            self::OTHER => 'text-primary',
         };
     }
 }

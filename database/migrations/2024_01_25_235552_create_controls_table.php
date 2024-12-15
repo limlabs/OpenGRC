@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('code');
             $table->longText('description');
             $table->longText('discussion')->nullable();
+            $table->longText('test')->nullable();
             $table->string('type')->default(\App\Enums\ControlType::OTHER);
             $table->string('category')->default(\App\Enums\ControlCategory::OTHER);
             $table->string('enforcement')->default(\App\Enums\ControlEnforcementCategory::UNKNOWN);

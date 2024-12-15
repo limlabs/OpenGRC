@@ -96,8 +96,23 @@ class ImplementationResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('effectiveness')
-                    ->toggleable()
-                    ->sortable()
+                    ->getStateUsing(fn ($record) => $record->getEffectiveness())
+                    ->sortable(true,
+                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
+                            $q->orderBy('effectiveness', $direction);
+                        })
+                    )
+                    ->badge()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('last_assessed')
+                    ->label('Last Audit')
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate())
+                    ->sortable(true,
+                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
+                            $q->orderBy('effectiveness', $direction);
+                        })
+                    )
+                    ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->toggleable()
@@ -114,7 +129,17 @@ class ImplementationResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('status')->options(ImplementationStatus::class),
-                SelectFilter::make('effectiveness')->options(Effectiveness::class),
+                SelectFilter::make('effectiveness')
+                    ->options(Effectiveness::class)
+                    ->query(function (Builder $query, array $data) {
+                        if (! isset($data['value'])) {
+                            return $query;
+                        }
+
+                        return $query->whereHas('auditItems', function ($q) use ($data) {
+                            $q->where('effectiveness', $data['value']);
+                        });
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -139,7 +164,9 @@ class ImplementationResource extends Resource
                             ->columnSpan(2)
                             ->getStateUsing(fn ($record) => "{$record->code} - {$record->title}")
                             ->label('Title'),
-                        TextEntry::make('effectiveness')->badge(),
+                        TextEntry::make('effectiveness')
+                            ->getStateUsing(fn ($record) => $record->getEffectiveness())
+                            ->badge(),
                         TextEntry::make('status')->badge(),
                         TextEntry::make('details')
                             ->columnSpanFull()

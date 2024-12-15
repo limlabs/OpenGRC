@@ -15,16 +15,6 @@ class AuditItemRelationManager extends RelationManager
     //set table name as Audit Results
     public static ?string $title = 'Audit History';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('effectiveness')
-                    ->required()
-                    ->maxLength(255),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -32,28 +22,20 @@ class AuditItemRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('audit.title')
                     ->label('Audit Name'),
-                Tables\Columns\TextColumn::make('effectiveness'),
+                Tables\Columns\TextColumn::make('effectiveness')
+                    ->badge(),
                 Tables\Columns\TextColumn::make('audit.updated_at')
-                    ->label('Date Assessed'),
+                    ->label('Date Assessed')
+                    ->badge(),
                 Tables\Columns\TextColumn::make('auditor_notes')
                     ->label('Auditor Notes')
                     ->words(100)
                     ->html(),
             ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                //                Tables\Actions\CreateAction::make(),
-            ])
             ->actions([
-                //                Tables\Actions\EditAction::make(),
-                //                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\ViewAction::make()
+                    ->label('View Audit Item')
+                    ->url(fn ($record) => route('filament.app.resources.audit-items.view', $record->id)),
             ]);
     }
 }

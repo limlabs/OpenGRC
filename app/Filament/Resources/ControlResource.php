@@ -38,6 +38,7 @@ class ControlResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(3)
             ->schema([
                 Forms\Components\Select::make('standard_id')
                     ->label('Standard')
@@ -49,6 +50,10 @@ class ControlResource extends Resource
                     ->required()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a unique code for this control. This code will be used to identify this control in the system.')
                     ->maxLength(255),
+                Forms\Components\Select::make('enforcement')
+                    ->options(ControlEnforcementCategory::class)
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Select an enforcement category for this control. This will help determine how this control is enforced.')
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->columnSpanFull()
@@ -60,6 +65,10 @@ class ControlResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\RichEditor::make('discussion')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Optional: Provide any context or additional information about this control that would help someone determine how to implement it.')
+                    ->columnSpanFull(),
+                Forms\Components\RichEditor::make('test')
+                    ->label('Test Plan')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Optional: How do you plan to test that this control is in place and effective?')
                     ->columnSpanFull(),
             ]);
     }
