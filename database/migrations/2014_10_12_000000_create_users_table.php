@@ -21,6 +21,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
+            $table->timestamp('last_activity')->nullable();
         });
     }
 
