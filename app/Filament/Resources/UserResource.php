@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -85,20 +86,7 @@ class UserResource extends Resource
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\Action::make('reset_password')
                         ->label('Force Password Reset')
-                        ->action(function (User $record): void {
-                            $password = UserResource::createDefaultPassword();
-                            $record->password_reset_required = true;
-                            $record->password = bcrypt($password);
-                            $record->save();
-
-                            // Send the email with the password to the user
-                            Mail::to($record->email)->send(new UserForceResetMail($record->email, $record->name, $password));
-
-                            Notification::make()
-                                ->title('Password reset forced for user')
-                                ->warning()
-                                ->send();
-                        })
+                        ->action(fn (User $record) => UserResource::resetPasswordAction($record))
                         ->requiresConfirmation()
                         ->icon('heroicon-o-key')
                         ->color('warning'),
@@ -141,5 +129,21 @@ class UserResource extends Resource
     public static function createDefaultPassword(): string
     {
         return Str::replace(' ', '-', implode(' ', Factory::create('en_US')->words(4)));
+    }
+
+    public static function resetPasswordAction(User $record): void
+    {
+        $password = UserResource::createDefaultPassword();
+        $record->password_reset_required = true;
+        $record->password = bcrypt($password);
+        $record->save();
+
+        // Send the email with the password to the user
+        Mail::to($record->email)->send(new UserForceResetMail($record->email, $record->name, $password));
+
+        Notification::make()
+            ->title('Password reset forced for user')
+            ->warning()
+            ->send();
     }
 }
