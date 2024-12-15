@@ -29,6 +29,7 @@ class ListUsers extends ListRecords
                     TextInput::make('email')
                         ->label('Email')
                         ->email()
+                        ->unique('users', 'email')
                         ->required(),
                     Select::make('role')
                         ->relationship('roles', 'name')
