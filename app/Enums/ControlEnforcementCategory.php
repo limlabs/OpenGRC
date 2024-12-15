@@ -29,6 +29,7 @@ enum ControlEnforcementCategory: string implements hasColor, hasLabel
             self::ADDRESSABLE => 'warning',
             self::OPTIONAL => 'primary',
             self::OTHER => 'primary',
+            self::UNKNOWN => 'primary',
         };
     }
 

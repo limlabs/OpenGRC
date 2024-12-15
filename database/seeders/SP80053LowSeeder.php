@@ -53,7 +53,7 @@ class SP80053LowSeeder extends Seeder
                 'title' => $record['Title'],
                 'type' => $record['Type'] ?? ControlType::OTHER,
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
-                'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::UNKNOWN,
+                'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::OTHER,
                 'discussion' => HelperController::linesToParagraphs($record['Discussion'], 'control-discussion-text'),
                 'description' => HelperController::linesToParagraphs($record['Description'], 'control-description-text'),
             ]);

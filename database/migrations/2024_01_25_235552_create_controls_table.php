@@ -21,7 +21,7 @@ return new class extends Migration
             $table->longText('test')->nullable();
             $table->string('type')->default(\App\Enums\ControlType::OTHER);
             $table->string('category')->default(\App\Enums\ControlCategory::OTHER);
-            $table->string('enforcement')->default(\App\Enums\ControlEnforcementCategory::UNKNOWN);
+            $table->string('enforcement')->default(\App\Enums\ControlEnforcementCategory::MANDATORY);
             $table->string('effectiveness')->default(\App\Enums\Effectiveness::UNKNOWN);
             $table->string('applicability')->default(\App\Enums\Applicability::UNKNOWN);
             $table->softDeletes();

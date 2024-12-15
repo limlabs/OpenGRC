@@ -54,7 +54,7 @@ class CSCSeeder extends Seeder
                 'title' => $record['title'],
                 'type' => $record['Type'] ?? ControlType::OTHER,
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
-                'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::UNKNOWN,
+                'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::OTHER,
                 'discussion' => '',
                 'description' => HelperController::linesToParagraphs($record['description'], 'control-description-text'),
             ]);

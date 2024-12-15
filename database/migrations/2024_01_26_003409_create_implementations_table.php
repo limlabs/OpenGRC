@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('status')->default(\App\Enums\ImplementationStatus::UNKNOWN);
             $table->text('notes')->nullable();
             $table->text('test_procedure')->nullable();
-            $table->text('test_procedure')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

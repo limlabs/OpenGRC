@@ -42,7 +42,7 @@ class SP800171r3Seeder extends Seeder
                 'title' => $record['Security Requirement'],
                 'type' => $record['Type'] ?? ControlType::OTHER,
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
-                'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::UNKNOWN,
+                'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::MANDATORY,
                 'discussion' => '',
                 'description' => HelperController::linesToParagraphs($record['Description'], 'control-description-text'),
             ]);
