@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Mail\UserCreatedMail;
 use App\Mail\UserForceResetMail;
 use App\Models\User;
 use Faker\Factory;
@@ -86,10 +87,18 @@ class UserResource extends Resource
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\Action::make('reset_password')
                         ->label('Force Password Reset')
+                        ->hidden(fn (User $record) => $record->last_activity == null)
                         ->action(fn (User $record) => UserResource::resetPasswordAction($record))
                         ->requiresConfirmation()
                         ->icon('heroicon-o-key')
                         ->color('warning'),
+                    Tables\Actions\Action::make('reinvite')
+                        ->label('Re-invite User')
+                        ->hidden(fn (User $record) => $record->last_activity !== null)
+                        ->action(fn (User $record) => UserResource::reinviteUserAction($record))
+                        ->requiresConfirmation()
+                        ->icon('heroicon-o-key')
+                        ->color('primary'),
                 ]),
             ])
             ->bulkActions([
@@ -144,6 +153,23 @@ class UserResource extends Resource
         Notification::make()
             ->title('Password reset forced for user')
             ->warning()
+            ->send();
+    }
+
+    public static function reinviteUserAction(User $record): void
+    {
+        // Generate a new password for the user
+        $password = UserResource::createDefaultPassword();
+        $record->password_reset_required = true;
+        $record->password = bcrypt($password);
+        $record->save();
+
+        // Send the email with the password to the user
+        Mail::to($record->email)->send(new UserCreatedMail($record->email, $record->name, $record->password));
+
+        Notification::make()
+            ->title('User Re-invited')
+            ->success()
             ->send();
     }
 }
