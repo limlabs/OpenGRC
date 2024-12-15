@@ -165,7 +165,7 @@ class UserResource extends Resource
         $record->save();
 
         // Send the email with the password to the user
-        Mail::to($record->email)->send(new UserCreatedMail($record->email, $record->name, $record->password));
+        Mail::to($record->email)->send(new UserCreatedMail($record->email, $record->name, $password));
 
         Notification::make()
             ->title('User Re-invited')
