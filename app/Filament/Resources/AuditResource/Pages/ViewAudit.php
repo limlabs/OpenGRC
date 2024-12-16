@@ -71,6 +71,10 @@ class ViewAudit extends ViewRecord
                     ->modalSubmitActionLabel('Yes, start the audit!')
                     ->disabled(function (Audit $record, $livewire) {
 
+                        if ($record->manager_id != auth()->id()) {
+                            return true; // Disable if not the audit manager
+                        }
+
                         if ($record->status == WorkflowStatus::INPROGRESS) {
                             return true; // Disable if already in progress
                         }
@@ -102,10 +106,16 @@ class ViewAudit extends ViewRecord
                     ->modalDescription('Are you sure you want to complete this audit? Ths can only be undone by an administrator.')
                     ->modalSubmitActionLabel('Yes, complete this audit!')
                     ->modalIconColor('danger')
-                    ->disabled(function (Audit $record, $livewire) {
+                    ->disabled(function (Audit $record, $livewire) {if ($record->manager_id != auth()->id()) {
+                        return true; // Disable if not the audit manager
+                    }
 
                         if (auth()->user()->hasRole('Super Admin')) {
                             return false; // Enable for Super Admin
+                        }
+
+                        if ($record->manager_id != auth()->id()) {
+                            return true; // Disable if not the audit manager
                         }
 
                         if ($record->status == WorkflowStatus::INPROGRESS) {
@@ -121,7 +131,9 @@ class ViewAudit extends ViewRecord
                             $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
 
                             // If the audit item is an implementation, update the effectiveness
-                            $auditItem->implementation()->update(['effectiveness' => $auditItem->effectiveness]);
+                            if ($auditItem->auditable_type == 'App\Models\Implementation') {
+                                $auditItem->implementation()->update(['effectiveness' => $auditItem->effectiveness]);
+                            }
                         }
 
                         //Save the final audit report

@@ -8,6 +8,7 @@ use App\Models\DataRequestResponse;
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
@@ -17,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class DataRequestResponseResource extends Resource
@@ -31,6 +33,28 @@ class DataRequestResponseResource extends Resource
     {
         return $form
             ->schema([
+                Section::make('Evidence Requested')
+                    ->columnSpanFull()
+                    ->schema([
+                        Placeholder::make('request.dataRequest.details')
+                            ->content(fn ($record) => $record->dataRequest->details ?? 'No details available')
+                            ->label('Data Request Details'),
+                        Placeholder::make('request.dataRequest.auditItem.audit.name')
+                            ->content(fn ($record) => $record->dataRequest->auditItem->audit->title ?? 'No audit name available')
+                            ->label('Audit Name'),
+                        Placeholder::make('request.dataRequest.auditItem.audit.name')
+                            ->content(function ($record) {
+                                return $record->dataRequest->auditItem->auditable->title ?? 'No audit name available';
+                            })
+                            ->label(function ($record) {
+                                return $record->dataRequest->auditItem->auditable_type === 'App\Models\Control' ? 'Control Name' : 'Implementation Name';
+                            }),
+                        Placeholder::make('request.dataRequest.auditItem.audit.description')
+                            ->content(function ($record) {
+                                return new HtmlString($record->dataRequest->auditItem->auditable->description);
+                            })
+                            ->label('Control Description'),
+                    ]),
                 Section::make('Response')
                     ->columnSpanFull()
                     ->schema([
