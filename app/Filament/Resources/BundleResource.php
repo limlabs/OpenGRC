@@ -120,10 +120,6 @@ class BundleResource extends Resource
                     ->modalHeading('Fetch Bundles')
                     ->modalIconColor('danger')
                     ->action(function () {
-                        Notification::make()
-                            ->title('Fetch Started')
-                            ->body('Fetching the latest bundles from the OpenGRC repository.')
-                            ->send();
                         BundleController::retrieve();
                     }),
             ])

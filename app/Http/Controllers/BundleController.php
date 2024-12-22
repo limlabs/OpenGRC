@@ -31,7 +31,11 @@ class BundleController extends Controller
         $repo = setting('general.repo', 'https://repo.opengrc.com');
 
         try {
-            $response = Http::get($repo)->throw();
+            $response = Http::withHeaders([
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+            ])->get($repo)->throw();
             $bundles = json_decode($response->body());
 
             foreach ($bundles as $bundle) {
