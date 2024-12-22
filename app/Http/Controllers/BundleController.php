@@ -31,7 +31,6 @@ class BundleController extends Controller
         $repo = setting('general.repo', 'https://repo.opengrc.com');
 
         try {
-            // Using throw() will cause an exception if the response is not a successful (2xx) status
             $response = Http::get($repo)->throw();
             $bundles = json_decode($response->body());
 
@@ -49,14 +48,20 @@ class BundleController extends Controller
                 );
             }
 
-            //            dd($bundles);
-
         } catch (RequestException $e) {
             // Catch exceptions such as 4xx/5xx HTTP status codes or connection issues
-            dd('Download failed: '.$e->getMessage());
+            Notification::make()
+                ->title('Error Updating Repository')
+                ->body($e->getMessage())
+                ->color('danger')
+                ->send();
         } catch (\Exception $e) {
             // Catch any other potential exceptions
-            dd('An unexpected error occurred: '.$e->getMessage());
+            Notification::make()
+                ->title('Error Updating Repository')
+                ->body($e->getMessage())
+                ->color('danger')
+                ->send();
         }
 
         Notification::make()
@@ -101,7 +106,7 @@ class BundleController extends Controller
                 );
             }
 
-            $bundle->update(['status' => "imported"]);
+            $bundle->update(['status' => 'imported']);
 
         } catch (RequestException $e) {
             // Catch exceptions such as 4xx/5xx HTTP status codes or connection issues
