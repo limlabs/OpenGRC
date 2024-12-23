@@ -120,7 +120,7 @@ class InstallController extends Controller
     public static function runNpmBuild($command): bool
     {
         $command->info('[✓] Building Front-End Assets...');
-        $process = new Process(['npm', '-i']);
+        $process = new Process(['npm', 'i']);
         $process->run();
         $process = new Process(['npm', 'run', 'build']);
         $process->run();
