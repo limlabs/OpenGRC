@@ -41,8 +41,6 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission, 'category' => 'other']);
         }
 
-        //        dd(Permission::all());
-
         // Assign Permissions to Super Admin
         $superAdmin->givePermissionTo(Permission::all());
 
@@ -61,8 +59,8 @@ class RolePermissionSeeder extends Seeder
         }
         $securityAdmin->givePermissionTo('Manage Preferences');
 
-        // Assign users with ID 1, 2, 3, and 4 to the Super Admin role
-        $userIds = [1, 2, 3, 4, 5];
+        // Assign users with ID 1 Super Admin
+        $userIds = [1];
         foreach ($userIds as $userId) {
             $user = User::find($userId);
             if ($user) {
@@ -71,12 +69,12 @@ class RolePermissionSeeder extends Seeder
         }
 
         // Assign users with ID 6, 7, 8, 9, 10 Regular User
-        $userIds = [6, 7, 8, 9, 10];
-        foreach ($userIds as $userId) {
-            $user = User::find($userId);
-            if ($user) {
-                $user->assignRole($regular);
-            }
-        }
+//        $userIds = [6, 7, 8, 9, 10];
+//        foreach ($userIds as $userId) {
+//            $user = User::find($userId);
+//            if ($user) {
+//                $user->assignRole($regular);
+//            }
+//        }
     }
 }
