@@ -4,7 +4,7 @@ cp .env.example .env
 
 # Check Node.js version
 node_version=$(node -v | cut -c 2-)
-if [[ "$node_version" -lt "16" ]]; then
+if [[ "$node_version" < "16" ]]; then
   echo "Checking Node.js version... FAILED! Node.js version 16 or higher is required. You have $node_version"
   exit 1
 else
@@ -13,7 +13,7 @@ fi
 
 # Check NPM version
 npm_version=$(npm -v)
-if [[ "$npm_version" -lt "9" ]]; then
+if [[ "$npm_version" < "9" ]]; then
   echo "Checking NPM version... FAILED! NPM version 9 or higher is required. You have $npm_version"
   exit 1
 else
