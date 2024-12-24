@@ -20,6 +20,12 @@ else
   echo "Checking NPM version... GOOD!"
 fi
 
+
+# Run Composer
+echo "Getting Dependencies..."
+  composer update
+
+
 # Generate application key
 echo "Generating application key..."
   php artisan key:generate
