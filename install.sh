@@ -167,7 +167,8 @@ sudo chmod 777 artisan
 sudo chmod 777 install
 sudo chmod 777 vendor/bin/*
 sudo chmod 777 storage -R
-sudo chmod 777 database/opengrc.sqlite -R
+sudo chmod 777 database
+sudo chmod 777 database/opengrc.sqlite
 sudo chmod 777 node_modules/.bin/*
 
 echo -e "\033[5m\033[31m** IMPORTANT **\033[0m"
