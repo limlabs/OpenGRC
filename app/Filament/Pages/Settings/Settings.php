@@ -7,6 +7,8 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Illuminate\Support\Facades\Crypt;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
 class Settings extends BaseSettings
@@ -98,7 +100,18 @@ class Settings extends BaseSettings
                             RichEditor::make('mail.templates.evidence_request_body')
                                 ->label('Evidence Request Body')
                                 ->columnSpanFull(),
-
+                        ]),
+                    Tabs\Tab::make('AI Settings')
+                        ->schema([
+                            Toggle::make('ai.enabled')
+                                ->label('Enable AI Suggestions')
+                                ->default(false),
+                            TextInput::make('ai.openai_key')
+                                ->label('OpenAI API Key (Optional)')
+                                ->password()
+                                ->helperText('The API key for OpenAI')
+                                ->default(fn ($state) => filled($state) ? Crypt::decryptString($state) : null)
+                                ->dehydrateStateUsing(fn ($state) => filled($state) ? Crypt::encryptString($state) : null),
                         ]),
                 ]),
         ];
