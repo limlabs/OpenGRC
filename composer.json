@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "ext-fileinfo": "*",
+        "amidesfahani/filament-tinyeditor": "^2.0",
         "awcodes/filament-table-repeater": "^3.0.5",
         "barryvdh/laravel-dompdf": "^3.0",
         "cyclonedx/cyclonedx-php-composer": "*",

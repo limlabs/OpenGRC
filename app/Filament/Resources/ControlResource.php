@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use App\Enums\ControlCategory;
 use App\Enums\ControlEnforcementCategory;
 use App\Enums\ControlType;
@@ -59,14 +60,15 @@ class ControlResource extends Resource
                     ->columnSpanFull()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a title for this control.')
                     ->maxLength(1024),
-                Forms\Components\RichEditor::make('description')
+                TinyEditor::make('description')
                     ->required()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a description for this control. This should describe, in detail, the requirements for this this control.')
+                    ->extraInputAttributes(['class' => 'filament-forms-rich-editor-unfiltered'])
                     ->columnSpanFull(),
-                Forms\Components\RichEditor::make('discussion')
+                TinyEditor::make('discussion')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Optional: Provide any context or additional information about this control that would help someone determine how to implement it.')
                     ->columnSpanFull(),
-                Forms\Components\RichEditor::make('test')
+                TinyEditor::make('test')
                     ->label('Test Plan')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Optional: How do you plan to test that this control is in place and effective?')
                     ->columnSpanFull(),
@@ -195,6 +197,12 @@ class ControlResource extends Resource
                             ->html(),
                         TextEntry::make('discussion')
                             ->columnSpanFull()
+                            ->hidden(fn (Control $record) => ! $record->discussion)
+                            ->html(),
+                        TextEntry::make('test')
+                            ->label('Test Plan')
+                            ->columnSpanFull()
+                            ->hidden(fn (Control $record) => ! $record->discussion)
                             ->html(),
                     ]),
             ]);
