@@ -35,16 +35,28 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->unique('users', 'email')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Placeholder::make('roles_list')
+                    ->content(
+                        function (Model $record) {
+                            return $record->roles->pluck('name')->join(', ');
+                        }
+                    )
+                    ->label('Roles')
+                    ->disabled(),
+                Forms\Components\Placeholder::make('last_activity')
+                    ->content(
+                        function (Model $record) {
+                            return $record->last_activity ? $record->last_activity->format('Y-m-d H:i:s') : null;
+                        }
+                    )
+                    ->label('Last Activity')
+                    ->disabled(),
             ]);
     }
 
