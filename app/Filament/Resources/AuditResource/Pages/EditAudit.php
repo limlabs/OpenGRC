@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AuditResource\Pages;
 
 use App\Filament\Resources\AuditResource;
 use App\Models\Standard;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -36,16 +37,25 @@ class EditAudit extends EditRecord
                     ->schema([
                         TextInput::make('title')
                             ->hint('Give the audit a distinctive title.')
-                            ->default('My Title Here - DELETE ME')
                             ->required()
                             ->columns(1)
                             ->placeholder('2023 SOC 2 Type II Audit')
+                            ->columnSpanFull()
                             ->maxLength(255),
                         Select::make('manager_id')
                             ->label('Audit Manager')
                             ->hint('Who will be managing this audit?')
                             ->options(Standard::query()->where('status', 'In Scope')->pluck('name', 'id')->toArray())
                             ->columns(1)
+                            ->searchable(),
+                        Select::make('members')
+                            ->relationship('members')
+                            ->label('Additional Members')
+                            ->hint('Who else should have full access to the Audit?')
+                            ->helperText('Note: You don\'t need to add evidence people who are only fulfilling requests here.')
+                            ->options(User::query()->pluck('name', 'id')->toArray())
+                            ->columns(1)
+                            ->multiple()
                             ->searchable(),
                         Textarea::make('description')
                             ->columnSpanFull(),

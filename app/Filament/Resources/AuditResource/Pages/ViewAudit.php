@@ -106,9 +106,10 @@ class ViewAudit extends ViewRecord
                     ->modalDescription('Are you sure you want to complete this audit? Ths can only be undone by an administrator.')
                     ->modalSubmitActionLabel('Yes, complete this audit!')
                     ->modalIconColor('danger')
-                    ->disabled(function (Audit $record, $livewire) {if ($record->manager_id != auth()->id()) {
-                        return true; // Disable if not the audit manager
-                    }
+                    ->disabled(function (Audit $record, $livewire) {
+                        if ($record->manager_id != auth()->id()) {
+                            return true; // Disable if not the audit manager
+                        }
 
                         if (auth()->user()->hasRole('Super Admin')) {
                             return false; // Enable for Super Admin
@@ -161,7 +162,17 @@ class ViewAudit extends ViewRecord
                     ->label('Download Audit Report')
                     ->size(ActionSize::Small)
                     ->color('primary')
-                    ->disabled($record->status == WorkflowStatus::NOTSTARTED)
+                    ->disabled(function (Audit $record) {
+                        $record->load('members');
+
+                        if ($record->status == WorkflowStatus::NOTSTARTED) {
+                            return true;
+                        } elseif ($record->manager_id != auth()->id() && $record->members->doesntContain(auth()->user())) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    })
                     ->action(function (Audit $audit, $livewire) {
                         if ($audit->status == WorkflowStatus::COMPLETED) {
                             $filepath = "app/private/audit_reports/AuditReport-{$this->record->id}.pdf";

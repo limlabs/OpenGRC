@@ -26,8 +26,11 @@ class RoleResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('description')
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('guard_name')
                     ->required()
+                    ->visible(false)
                     ->disabled()
                     ->maxLength(255),
             ]);
@@ -40,7 +43,7 @@ class RoleResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('guard_name')
+                Tables\Columns\TextColumn::make('description')
                     ->searchable()
                     ->sortable(),
             ])
