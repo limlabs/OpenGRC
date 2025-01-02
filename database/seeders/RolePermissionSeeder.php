@@ -41,6 +41,10 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission, 'category' => 'other']);
         }
 
+        //Bundle Permissions
+        Permission::firstOrCreate(['name' => 'Manage Bundles', 'category' => 'Bundles']);
+        Permission::firstOrCreate(['name' => 'View Bundles', 'category' => 'Bundles']);
+
         // Assign Permissions to Super Admin
         $superAdmin->givePermissionTo(Permission::all());
 
@@ -58,6 +62,7 @@ class RolePermissionSeeder extends Seeder
             }
         }
         $securityAdmin->givePermissionTo('Manage Preferences');
+        $securityAdmin->givePermissionTo('View Bundles');
 
         // Assign users with ID 1 Super Admin
         $userIds = [1];
@@ -68,13 +73,5 @@ class RolePermissionSeeder extends Seeder
             }
         }
 
-        // Assign users with ID 6, 7, 8, 9, 10 Regular User
-//        $userIds = [6, 7, 8, 9, 10];
-//        foreach ($userIds as $userId) {
-//            $user = User::find($userId);
-//            if ($user) {
-//                $user->assignRole($regular);
-//            }
-//        }
     }
 }

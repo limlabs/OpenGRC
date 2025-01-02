@@ -7,6 +7,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Cache;
 
 class PermissionsRelationManager extends RelationManager
 {
@@ -35,12 +36,24 @@ class PermissionsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->label('Attach Permission to this Role')
+                    ->after(function ($record) {
+                        Cache::forget('spatie.permission.cache');
+                    })
                     ->preloadRecordSelect(),
 
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()
+                    ->after(function ($record) {
+                        Cache::forget('spatie.permission.cache');
+                    })
                     ->label('Detach from Role'),
             ]);
+    }
+
+    protected function saved(): void
+    {
+        // Clear the permissions cache
+        Cache::forget('spatie.permission.cache');
     }
 }
