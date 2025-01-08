@@ -33,6 +33,7 @@ class CreateUser extends Command
         $password = $this->argument('password');
         User::create([
             'email' => $email,
+            'name' => $email,
             'password' => Hash::make($password),
             'password_reset_required' => false,
         ]);
