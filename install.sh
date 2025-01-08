@@ -122,9 +122,8 @@ php artisan migrate
 read -p "Admin Username [admin@example.com]: " admin_username
 admin_username=${admin_username:-admin@example.com}
 read -s -p "Admin Password: " admin_password
-admin_username=${admin_username:-password}
+admin_password=${admin_password:-password}
 echo
-
 php artisan opengrc:create-user "$admin_username" "$admin_password"
 
 # Run seeders
