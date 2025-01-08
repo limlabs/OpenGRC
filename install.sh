@@ -82,6 +82,7 @@ select db_choice in sqlite mysql postgres; do
     sqlite)
       sed -i'' -e "s/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/" .env
       sed -i'' -e "s#^DB_DATABASE=.*#DB_DATABASE=$(pwd)/database/opengrc.sqlite#" .env
+      rm -f database/opengrc.sqlite
       break
       ;;
     mysql|postgres)
@@ -121,20 +122,10 @@ php artisan migrate
 read -p "Admin Username [admin@example.com]: " admin_username
 admin_username=${admin_username:-admin@example.com}
 read -s -p "Admin Password: " admin_password
+admin_username=${admin_username:-password}
 echo
-php artisan tinker <<EOF
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
-\$user = User::create([
-  'name' => 'Admin User',
-  'email' => '$admin_username',
-  'password' => Hash::make('$admin_password'),
-  'password_reset_required' => false,
-]);
-
-echo "Admin User Created...\n";
-EOF
+php artisan opengrc:create-user "$admin_username" "$admin_password"
 
 # Run seeders
 echo "Setting up custom configurations..."
@@ -164,7 +155,7 @@ find . -type f -print0 | xargs --null sudo chmod 666
 find . -type d -print0 | xargs --null sudo chmod 775
 sudo chmod 777 set_permissions
 sudo chmod 777 artisan
-sudo chmod 777 install
+sudo chmod 777 install.sh
 sudo chmod 777 vendor/bin/*
 sudo chmod 777 storage -R
 sudo chmod 777 database
