@@ -44,7 +44,7 @@ class SP800171r3Seeder extends Seeder
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
                 'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::MANDATORY,
                 'discussion' => '',
-                'description' => HelperController::linesToParagraphs($record['Description'], 'control-description-text'),
+                'description' => $record['Description'],
             ]);
         }
     }

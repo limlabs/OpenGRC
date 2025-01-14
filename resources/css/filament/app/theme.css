@@ -23,6 +23,26 @@
         background-color: #1375a0 !important;
     }
 
+    .control-description-text ul {
+        /* Force bullet styling */
+        list-style-type: disc !important; /* or circle, square, etc. */
+        list-style-position: outside; /* or 'inside' depending on your preference */
+        margin-left: 1.5rem; /* ensures the bullet is visible and not clipped */
+        padding-left: 1.5rem;
+    }
+
+    .control-description-text ol {
+        /* Force numbering styling */
+        list-style-type: decimal !important; /* or lower-alpha, upper-roman, etc. */
+        list-style-position: outside; /* or 'inside' depending on your preference */
+        margin-left: 1.5rem; /* ensures the number is visible and not clipped */
+        padding-left: 1.5rem;
+    }
+
+    .control-description-text p {
+        margin-bottom: 1rem;
+    }
+
 }
 
 

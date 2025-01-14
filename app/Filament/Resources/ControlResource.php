@@ -194,6 +194,7 @@ class ControlResource extends Resource
                             }),
                         TextEntry::make('description')
                             ->columnSpanFull()
+                            ->extraAttributes(['class' => 'control-description-text'])
                             ->html(),
                         TextEntry::make('discussion')
                             ->columnSpanFull()
