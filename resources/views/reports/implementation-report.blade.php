@@ -34,13 +34,13 @@
         <center><h1>Audit Report</h1></center>
 
         <br><br>
-        @php
-            $path = public_path('img/logo.png'); // Adjust this path if needed
-            $imageData = base64_encode(file_get_contents($path));
-            $mimeType = mime_content_type($path);
-        @endphp
+            @php
+                $logoPath = setting('report.logo')
+                    ? storage_path('app/public/' . setting('report.logo'))
+                    : public_path('img/logo.png');
+            @endphp
         <center>
-        <img style="max-width: 40%" src="data:{{ $mimeType }};base64,{{ $imageData }}" alt="Logo">
+            <img style="max-width: 350px" src="{{ $logoPath }}" alt="Report Logo">
         </center>
         <br><br>
         <center><h2>{{ $audit->title }}</h2></center>

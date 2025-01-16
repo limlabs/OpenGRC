@@ -3,6 +3,7 @@
 namespace App\Filament\Pages\Settings;
 
 use Closure;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -112,6 +113,16 @@ class Settings extends BaseSettings
                                 ->helperText('The API key for OpenAI')
                                 ->default(fn ($state) => filled($state) ? Crypt::decryptString($state) : null)
                                 ->dehydrateStateUsing(fn ($state) => filled($state) ? Crypt::encryptString($state) : null),
+                        ]),
+                    Tabs\Tab::make('Report Settings')
+                        ->schema([
+                            FileUpload::make('report.logo')
+                                ->label('Report Logo')
+                                ->helperText('The logo to display on reports. Be sure to upload a file that is at least 512px wide.')
+                                ->acceptedFileTypes(['image/*'])
+                                ->disk('public')
+                                ->maxFiles(1)
+                                ->imagePreviewHeight('150px'),
                         ]),
                 ]),
         ];

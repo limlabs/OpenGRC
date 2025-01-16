@@ -34,8 +34,13 @@
         <center><h1>Audit Report</h1></center>
 
         <br><br>
+            @php
+                $logoPath = setting('report.logo')
+                    ? storage_path('app/public/' . setting('report.logo'))
+                    : public_path('img/logo.png');
+            @endphp
         <center>
-        <img style="max-width: 40%" src="{{ public_path('img/logo.png') }}" alt="Report Logo"> 
+        <img style="max-width: 350px" src="{{ $logoPath }}" alt="Report Logo">
         </center>
         <br><br>
         <center><h2>{{ $audit->title }}</h2></center>
