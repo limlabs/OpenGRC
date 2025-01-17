@@ -17,6 +17,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
 
 //use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
@@ -46,6 +47,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->plugins([
+//                FilamentTourPlugin::make(),
                 FilamentSettingsPlugin::make()
                     ->pages([
                         \App\Filament\Pages\Settings\Settings::class,
