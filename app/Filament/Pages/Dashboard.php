@@ -6,6 +6,7 @@ use JibayMcs\FilamentTour\Tour\HasTour;
 use JibayMcs\FilamentTour\Tour\Step;
 use JibayMcs\FilamentTour\Tour\Tour;
 
+
 class Dashboard extends \Filament\Pages\Dashboard
 {
     use HasTour;
@@ -19,9 +20,10 @@ class Dashboard extends \Filament\Pages\Dashboard
     {
         return [
             \App\Filament\Widgets\StatsOverview::class,
-            \App\Filament\Widgets\IntroWidget::class,
+            //            \App\Filament\Widgets\IntroWidget::class,
             //            \App\Filament\Widgets\ImplementationsStatsWidget::class,
             \App\Filament\Widgets\ControlsStatsWidget::class,
+            \App\Filament\Widgets\ToDoList::class,
 
         ];
     }
@@ -29,7 +31,7 @@ class Dashboard extends \Filament\Pages\Dashboard
     /**
      * @throws \Exception
      */
-    //todo: add the tour to the dashboard
+    // todo: add the tour to the dashboard
     public function tours(): array
     {
         return [
