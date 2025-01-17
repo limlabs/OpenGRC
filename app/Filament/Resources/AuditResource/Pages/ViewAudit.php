@@ -5,6 +5,7 @@ namespace App\Filament\Resources\AuditResource\Pages;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource;
 use App\Models\Audit;
+use App\Models\Control;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -130,14 +131,10 @@ class ViewAudit extends ViewRecord
                         foreach ($record->auditItems as $auditItem) {
                             // If the audit item is not completed, mark it as completed
                             $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
-
-                            // If the audit item is an implementation, update the effectiveness
-                            if ($auditItem->auditable_type == 'App\Models\Implementation') {
-                                $auditItem->implementation()->update(['effectiveness' => $auditItem->effectiveness]);
-                            }
+                            $auditItem->auditable->update(['effectiveness' => $auditItem->effectiveness->value]);
                         }
 
-                        //Save the final audit report
+                        // Save the final audit report
                         $auditItems = $record->auditItems;
                         $reportTemplate = 'reports.audit';
                         if ($record->audit_type == 'implementations') {

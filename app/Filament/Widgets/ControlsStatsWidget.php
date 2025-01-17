@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\Effectiveness;
+use App\Models\Control;
 use Filament\Widgets\ChartWidget;
 
 class ControlsStatsWidget extends ChartWidget
@@ -20,16 +21,16 @@ class ControlsStatsWidget extends ChartWidget
 
         $in_scope_standards = \App\Models\Standard::where('status', 'In Scope')->get();
 
-        $effective = \App\Models\Control::where('effectiveness', Effectiveness::EFFECTIVE->value)
+        $effective = Control::where('effectiveness', Effectiveness::EFFECTIVE)->count();
+//            ->whereIn('standard_id', $in_scope_standards->pluck('id'))
+//            ->count() ?: 0;
+        $partial = Control::where('effectiveness', Effectiveness::PARTIAL)
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
-        $partial = \App\Models\Control::where('effectiveness', Effectiveness::PARTIAL)
+        $ineffective = Control::where('effectiveness', Effectiveness::INEFFECTIVE)
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
-        $ineffective = \App\Models\Control::where('effectiveness', Effectiveness::INEFFECTIVE)
-            ->whereIn('standard_id', $in_scope_standards->pluck('id'))
-            ->count() ?: 0;
-        $unknown = \App\Models\Control::where('effectiveness', Effectiveness::UNKNOWN)
+        $unknown = Control::where('effectiveness', Effectiveness::UNKNOWN)
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
 

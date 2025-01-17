@@ -12,6 +12,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
 {
+
     protected function getStats(): array
     {
 
@@ -39,7 +40,8 @@ class StatsOverview extends BaseWidget
         return [
             Stat::make('Audits in Progress', $audits_in_progress),
             Stat::make('Audits Completed', $audits_performed),
-            Stat::make('Controls in Scope', $controls_in_scope_count),
+            Stat::make('Controls in Scope', $controls_in_scope_count)
+            ,
             //            Stat::make('Controls Tested', $controls_in_scope_tested_count),
             Stat::make('Implementations', $implementations),
         ];
