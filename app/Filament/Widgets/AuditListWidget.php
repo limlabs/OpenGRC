@@ -12,23 +12,14 @@ class AuditListWidget extends BaseWidget
 {
     protected int|string|array $columnSpan = '2';
 
-    protected function getTableActions(): array
-    {
-        return [
-            Tables\Actions\Action::make('view_all')
-                ->label('View All Audits')
-                ->url(route('filament.app.resources.audits.index'))
-                ->color('primary'),
-        ];
-    }
-
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 Audit::query()->latest('updated_at')->take(5)
             )
-            ->emptyStateHeading(new HtmlString("You're all caught up!"))
+            ->emptyStateHeading(new HtmlString("No Audits to Show"))
+            ->emptyStateDescription('You have not created any audits yet. Create an Audit to get started.')
             ->emptyStateIcon('heroicon-o-check-circle')
             ->columns([
                 Tables\Columns\TextColumn::make('title')

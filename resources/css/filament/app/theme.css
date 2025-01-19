@@ -1,7 +1,13 @@
 @import '/vendor/filament/filament/resources/css/theme.css';
-@import '/vendor/awcodes/filament-table-repeater/resources/css/plugin.css';
 
-@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC:wght@400;700&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC:wght@400;700&display=swap');*/
+
+@font-face {
+    font-family: 'Bruno Ace SC';
+    src: url('/resources/fonts/BrunoAceSC-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
 
 @config 'tailwind.config.js';
 

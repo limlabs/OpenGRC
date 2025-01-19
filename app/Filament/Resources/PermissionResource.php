@@ -49,9 +49,6 @@ class PermissionResource extends Resource
                     })
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('guard_name')
-                    ->searchable()
-                    ->sortable(),
             ])
             ->filters([
                 //

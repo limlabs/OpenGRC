@@ -16,18 +16,26 @@ class ToDoListWidget extends BaseWidget
     {
         return $table
             ->query(
-                DataRequestResponse::query()->where('requestee_id', auth()->id())
+                DataRequestResponse::query()->where('requestee_id', auth()->id())->latest('updated_at')->take(5)
             )
+            ->heading('My ToDo List (Top-5)')
             ->emptyStateHeading(new HtmlString("You're all caught up!"))
             ->emptyStateIcon('heroicon-o-check-circle')
             ->columns([
                 Tables\Columns\TextColumn::make('request.title')
                     ->label('Request Title')
-                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('request.description')
                     ->label('Description')
                     ->wrap(),
-            ]);
+            ])
+            ->headerActions([
+                Tables\Actions\Action::make('create')
+                    ->label("View All My ToDo's")
+                    ->url(route('filament.app.resources.audits.index'))
+                    ->color('primary')
+                    ->size('xs'),
+            ])
+            ->paginated(false);
     }
 }
