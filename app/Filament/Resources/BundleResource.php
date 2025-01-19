@@ -24,6 +24,8 @@ class BundleResource extends Resource
 
     protected static ?string $navigationGroup = 'Settings';
 
+    protected static ?int $navigationSort = 5;
+
     public static function table(Table $table): Table
     {
         return $table

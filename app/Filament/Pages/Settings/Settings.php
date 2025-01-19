@@ -16,7 +16,7 @@ class Settings extends BaseSettings
 {
     protected static ?string $navigationGroup = 'Settings';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
 
     public static function canAccess(): bool
     {

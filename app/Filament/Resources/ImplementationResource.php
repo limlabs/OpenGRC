@@ -42,6 +42,11 @@ class ImplementationResource extends Resource
                 Forms\Components\TextInput::make('code')
                     ->maxLength(255)
                     ->required()
+                    ->unique(Implementation::class, 'code', ignoreRecord: true)
+                    ->live()
+                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, Forms\Components\TextInput $component) {
+                        $livewire->validateOnly($component->getStatePath());
+                    })
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a unique code for this implementation. This code will be used to identify this implementation in the system.'),
                 Forms\Components\Select::make('status')
                     ->required()

@@ -51,7 +51,13 @@ class ControlResource extends Resource
                 Forms\Components\TextInput::make('code')
                     ->required()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a unique code for this control. This code will be used to identify this control in the system.')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(Control::class, 'code', ignoreRecord: true)
+                    ->live()
+                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, Forms\Components\TextInput $component) {
+                        $livewire->validateOnly($component->getStatePath());
+                    })
+                ,
                 Forms\Components\Select::make('enforcement')
                     ->options(ControlEnforcementCategory::class)
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Select an enforcement category for this control. This will help determine how this control is enforced.')

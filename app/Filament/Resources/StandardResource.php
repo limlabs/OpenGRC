@@ -49,7 +49,12 @@ class StandardResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->placeholder('e.g. CSCv8')
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Give the standard a unique ID or Code.'),
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Give the standard a unique ID or Code.')
+                    ->unique(Standard::class, 'code', ignoreRecord: true)
+                    ->live()
+                    ->afterStateUpdated(function ($livewire, $component) {
+                        $livewire->validateOnly($component->getStatePath());
+                    }),
                 TextInput::make('authority')
                     ->required()
                     ->maxLength(255)

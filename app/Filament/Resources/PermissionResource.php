@@ -18,6 +18,8 @@ class PermissionResource extends Resource
 
     protected static ?string $navigationGroup = 'Settings';
 
+    protected static ?int $navigationSort = 20;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -38,6 +40,13 @@ class PermissionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('roles')
+                    ->label('In Role')
+                    ->state(function (Permission $record) {
+                        return $record->roles->pluck('name')->join(', ');
+                    })
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('guard_name')
