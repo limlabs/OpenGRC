@@ -129,7 +129,10 @@ class BundleResource extends Resource
                 Tables\Filters\SelectFilter::make('authority')
                     ->options(Bundle::pluck('authority', 'authority')->toArray())
                     ->label('Authority'),
-            ]);
+            ])
+            ->emptyStateHeading(new HtmlString('No Bundles Imported'))
+            ->emptyStateDescription(new HtmlString('Try fetching the latest bundles from the OpenGRC repository by clicking "Fetch Bundle Updates" above.'));
+
     }
 
     public static function infolist(Infolist $infolist): Infolist

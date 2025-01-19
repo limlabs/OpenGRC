@@ -135,11 +135,14 @@ class ViewAudit extends ViewRecord
 
                             // We don't want to overwrite the effectiveness if it's already set AND we're not assessing
                             if ($auditItem->effectiveness !== Effectiveness::UNKNOWN) {
-                                $auditItem->auditable->update(
-                                    ['effectiveness' => $auditItem->effectiveness->value,
-                                        'applicability' => $auditItem->applicability->value,
-                                    ]
-                                );
+
+                                $updateData = ['effectiveness' => $auditItem->effectiveness->value];
+
+                                if ($auditItem->auditable_type == 'App\Models\Control') {
+                                    $updateData['applicability'] = $auditItem->applicability->value;
+                                }
+
+                                $auditItem->auditable->update($updateData);
                             }
                         }
 

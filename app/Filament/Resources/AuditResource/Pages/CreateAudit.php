@@ -12,6 +12,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -35,18 +36,34 @@ class CreateAudit extends CreateRecord
                 ->columns(2)
                 ->schema([
                     Placeholder::make('Introduction')
-                        ->columnSpanFull()
-                        ->content(new HtmlString('
-                                    There are three Audit Types to choose from:
-                                        <p><strong>Standards Audit</strong></p>
-                                        <p>This kind of audit is used to check the compliance of the organization with a specific standard. The standard is selected from the list of standards available in the system. The audit will be performed against the controls specified in the selected standard.</p>
-                                        <p><strong>Implementations (Controls) Audit</strong></p>
-                                        <p>(Not yet implemented) This kind of audit is used to audit the specific implementations in your organization. Implementations are selected from your total list of implemented controls and setup for audit.</p>
-                                        <p><strong>Custom Audit</strong></p>
-                                        <p>Not yet implemented</p>
+                        ->label('There are two Audit Types to choose from:')
+                        ->columnSpanFull(),
+                    Section::make('Standards Audit')
+                        ->columnSpan(1)
+                        ->schema(
+                            [
+                                Placeholder::make('Introduction')
+                                    ->label('')
+                                    ->content(new HtmlString('                                 
+                                        <p>This audit type is used to check the compliance of the organization with a specific standard. The standard is selected from the list of standards available in the system. The audit will be performed against the controls specified in the selected standard.</p> <p><strong>Note:</strong> The standard must be set to In Scope first.</strong></p>                                       
                                 ')),
+                            ]
+                        ),
+
+                    Section::make('Implementations Audit')
+                        ->columnSpan(1)
+                        ->schema(
+                            [
+                                Placeholder::make('Introduction')
+                                    ->label('')
+                                    ->content(new HtmlString('
+                                   <p>This kind of audit is used to audit the implementations of controls in your organization. Implementations are selected from your total list of implemented controls and setup for audit.</p>
+                                ')),
+                            ]
+                        ),
 
                     Select::make('audit_type')
+                        ->label('Select Audit Type')
                         ->columns(1)
                         ->required()
                         ->options([

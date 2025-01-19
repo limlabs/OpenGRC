@@ -20,6 +20,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 
 class StandardResource extends Resource
 {
@@ -119,7 +120,9 @@ class StandardResource extends Resource
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateHeading(new HtmlString('No Standards Found'))
+            ->emptyStateDescription(new HtmlString('Try creating a new standard or adding one from an <a style="text-decoration: underline" href="bundles">OpenGRC Bundle</a>'));
     }
 
     public static function getWidgets(): array
@@ -154,7 +157,7 @@ class StandardResource extends Resource
             ]);
     }
 
-    //This is the view page for a single Standard record
+    // This is the view page for a single Standard record
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist

@@ -36,7 +36,7 @@ class ControlsStatsWidget extends ChartWidget
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
         $unknown = Control::where('effectiveness', Effectiveness::UNKNOWN)
-            ->where('applicability', Applicability::APPLICABLE)
+            ->where('applicability', '!=', Applicability::NOTAPPLICABLE)
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
 
