@@ -23,7 +23,8 @@ class Dashboard extends \Filament\Pages\Dashboard
             //            \App\Filament\Widgets\IntroWidget::class,
             //            \App\Filament\Widgets\ImplementationsStatsWidget::class,
             \App\Filament\Widgets\ControlsStatsWidget::class,
-            \App\Filament\Widgets\ToDoList::class,
+            \App\Filament\Widgets\AuditListWidget::class,
+            \App\Filament\Widgets\ToDoListWidget::class,
 
         ];
     }

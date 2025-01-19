@@ -2,8 +2,10 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\Applicability;
 use App\Enums\Effectiveness;
 use App\Models\Control;
+use App\Models\Standard;
 use Filament\Widgets\ChartWidget;
 
 class ControlsStatsWidget extends ChartWidget
@@ -19,18 +21,22 @@ class ControlsStatsWidget extends ChartWidget
     protected function getData(): array
     {
 
-        $in_scope_standards = \App\Models\Standard::where('status', 'In Scope')->get();
+        $in_scope_standards = Standard::where('status', 'In Scope')->get();
 
-        $effective = Control::where('effectiveness', Effectiveness::EFFECTIVE)->count();
-//            ->whereIn('standard_id', $in_scope_standards->pluck('id'))
-//            ->count() ?: 0;
+        $effective = Control::where('effectiveness', Effectiveness::EFFECTIVE)
+            ->where('applicability', Applicability::APPLICABLE)
+            ->whereIn('standard_id', $in_scope_standards->pluck('id'))
+            ->count() ?: 0;
         $partial = Control::where('effectiveness', Effectiveness::PARTIAL)
+            ->where('applicability', Applicability::APPLICABLE)
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
         $ineffective = Control::where('effectiveness', Effectiveness::INEFFECTIVE)
+            ->where('applicability', Applicability::APPLICABLE)
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
         $unknown = Control::where('effectiveness', Effectiveness::UNKNOWN)
+            ->where('applicability', Applicability::APPLICABLE)
             ->whereIn('standard_id', $in_scope_standards->pluck('id'))
             ->count() ?: 0;
 
@@ -40,11 +46,12 @@ class ControlsStatsWidget extends ChartWidget
                 [
                     'data' => [$effective, $partial, $ineffective, $unknown],
                     'backgroundColor' => [
-                        'rgb(45, 180, 45)',
-                        'rgb(220, 180, 35)',
-                        'rgb(255, 99, 132)',
-                        'rgb(90, 90, 90)',
+                        'rgb(52, 211, 153)',
+                        'rgb(252, 211, 77)',
+                        'rgb(244, 114, 182)',
+                        'rgb(107, 114, 128)',
                     ],
+                    'borderWidth' => [0, 0, 0, 0],
                 ],
             ],
         ];

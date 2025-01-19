@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use AmidEsfahani\FilamentTinyEditor\TinyEditor;
+use App\Enums\Applicability;
 use App\Enums\ControlCategory;
 use App\Enums\ControlEnforcementCategory;
 use App\Enums\ControlType;
@@ -93,14 +94,17 @@ class ControlResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('enforcement')
                     ->sortable(),
-                //Todo: Make Control Effectiveness Sortable
+                // Todo: Make Control Effectiveness Sortable
                 Tables\Columns\TextColumn::make('LatestAuditEffectiveness')
                     ->label('Effectiveness')
                     ->badge()
                     ->default(function (Control $record) {
                         return $record->getEffectiveness();
                     }),
-                //Todo: Make Last Audit Date Sortable
+                Tables\Columns\TextColumn::make('applicability')
+                    ->label('Applicability')
+                    ->badge(),
+                // Todo: Make Last Audit Date Sortable
                 Tables\Columns\TextColumn::make('LatestAuditDate')
                     ->label('Assessed')
                     ->default(function (Control $record) {
@@ -132,10 +136,13 @@ class ControlResource extends Resource
                 Tables\Filters\SelectFilter::make('enforcement')
                     ->options(ControlEnforcementCategory::class)
                     ->label('Enforcement'),
+                Tables\Filters\SelectFilter::make('applicability')
+                    ->options(Applicability::class)
+                    ->label('Applicability'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\ViewAction::make(),
+//                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

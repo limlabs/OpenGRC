@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\Applicability;
 use App\Enums\WorkflowStatus;
 use App\Models\Audit;
 use App\Models\Control;
@@ -12,7 +13,6 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
 {
-
     protected function getStats(): array
     {
 
@@ -30,20 +30,26 @@ class StatsOverview extends BaseWidget
 
         foreach (Standard::where('status', 'In Scope')->get() as $standard) {
             foreach (Control::where('standard_id', $standard->id)->get() as $control) {
-                $controls_in_scope[] = $control->id;
+                if ($control->applicability !== Applicability::NOTAPPLICABLE->value) {
+                    $controls_in_scope[] = $control->id;
+                }
             }
         }
 
         $controls_in_scope_count = count(array_unique($controls_in_scope));
         $controls_in_scope_tested_count = count(array_unique($controls_in_scope_tested));
 
+        // $controls_without_implementations = Control::where('applicability', 'Applicable')->whereDoesntHave('implementations')->count();
+
         return [
             Stat::make('Audits in Progress', $audits_in_progress),
             Stat::make('Audits Completed', $audits_performed),
             Stat::make('Controls in Scope', $controls_in_scope_count)
+//            ->description('Controls that are part of in-scope standards and not determined to be Not-Applicable already')
             ,
             //            Stat::make('Controls Tested', $controls_in_scope_tested_count),
             Stat::make('Implementations', $implementations),
+            // Stat::make('Controls without Implementations', $controls_without_implementations),
         ];
     }
 }

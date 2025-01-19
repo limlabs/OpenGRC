@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AuditResource\Pages;
 
+use App\Enums\Effectiveness;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource;
 use App\Models\Audit;
@@ -131,7 +132,15 @@ class ViewAudit extends ViewRecord
                         foreach ($record->auditItems as $auditItem) {
                             // If the audit item is not completed, mark it as completed
                             $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
-                            $auditItem->auditable->update(['effectiveness' => $auditItem->effectiveness->value]);
+
+                            // We don't want to overwrite the effectiveness if it's already set AND we're not assessing
+                            if ($auditItem->effectiveness !== Effectiveness::UNKNOWN) {
+                                $auditItem->auditable->update(
+                                    ['effectiveness' => $auditItem->effectiveness->value,
+                                        'applicability' => $auditItem->applicability->value,
+                                    ]
+                                );
+                            }
                         }
 
                         // Save the final audit report

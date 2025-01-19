@@ -6,8 +6,9 @@ use App\Models\DataRequestResponse;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Support\HtmlString;
 
-class ToDoList extends BaseWidget
+class ToDoListWidget extends BaseWidget
 {
     protected int|string|array $columnSpan = '2';
 
@@ -17,6 +18,8 @@ class ToDoList extends BaseWidget
             ->query(
                 DataRequestResponse::query()->where('requestee_id', auth()->id())
             )
+            ->emptyStateHeading(new HtmlString("You're all caught up!"))
+            ->emptyStateIcon('heroicon-o-check-circle')
             ->columns([
                 Tables\Columns\TextColumn::make('request.title')
                     ->label('Request Title')
