@@ -29,10 +29,10 @@ class ImplementationsStatsWidget extends ChartWidget
                 [
                     'data' => [$effective, $partial, $ineffective, $unknown],
                     'backgroundColor' => [
-                        'rgb(45, 180, 45)',
-                        'rgb(220, 180, 35)',
-                        'rgb(255, 99, 132)',
-                        'rgb(90, 90, 90)',
+                        'rgb(52, 211, 153)',
+                        'rgb(252, 211, 77)',
+                        'rgb(244, 114, 182)',
+                        'rgb(107, 114, 128)',
                     ],
                 ],
             ],

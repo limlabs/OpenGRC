@@ -20,6 +20,7 @@ class ToDoListWidget extends BaseWidget
             )
             ->heading('My ToDo List (Top-5)')
             ->emptyStateHeading(new HtmlString("You're all caught up!"))
+            ->emptyStateDescription('You have no pending ToDo items.')
             ->emptyStateIcon('heroicon-o-check-circle')
             ->columns([
                 Tables\Columns\TextColumn::make('request.title')
