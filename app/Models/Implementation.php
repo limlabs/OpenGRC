@@ -86,6 +86,14 @@ class Implementation extends Model
     }
 
     /**
+     * The risks that belong to the implementation.
+     */
+    public function risks(): BelongsToMany
+    {
+        return $this->belongsToMany(Risk::class);
+    }
+
+    /**
      * Get the name of the index associated with the model.
      */
     public function searchableAs(): string
@@ -135,5 +143,6 @@ class Implementation extends Model
     {
         return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('updated_at')->last()->format('M d, Y') : '';
     }
+
 
 }
