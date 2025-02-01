@@ -43,7 +43,7 @@ class ControlsRelationManager extends RelationManager
                     ->columnSpanFull(),
                 Forms\Components\RichEditor::make('discussion')
                     ->columnSpanFull()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Provide any explaination, discussion, context, or relevant information to help someone understand the intent of this control.'),
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Provide any explanation, discussion, context, or relevant information to help someone understand the intent of this control.'),
             ]);
     }
 
@@ -71,6 +71,7 @@ class ControlsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
+                    ->hiddenLabel()
                     ->url(fn ($record) => route('filament.app.resources.controls.view', $record)),
             ])
             ->bulkActions([

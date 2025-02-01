@@ -60,6 +60,14 @@ class Standard extends Model
     }
 
     /**
+     * Get the audits for the standard.
+     */
+    public function audits(): HasMany
+    {
+        return $this->hasMany(Audit::class, 'sid');
+    }
+
+    /**
      * Get the name of the index associated with the model.
      */
     public function searchableAs(): string

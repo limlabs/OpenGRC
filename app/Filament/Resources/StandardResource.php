@@ -116,8 +116,40 @@ class StandardResource extends Resource
                     ->label('Authority'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()->hiddenLabel(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('set_in_scope')
+                        ->label('Set In Scope')
+                        ->icon('heroicon-o-check-circle')
+                        ->modalHeading('Set Standard In Scope')
+                        ->modalContent(new HtmlString('Setting a Standard as "in-scope" will allow you to track and 
+                        audit to this standard. However, it will also show up in your dashboards and metrics. You can 
+                        undo this action with minimal disruption.<br><br>
+                        Are you sure you want to set this standard in scope?'))
+                        ->modalSubmitActionLabel('Set In Scope')
+                        ->hidden(
+                            fn ($record) => $record->status === StandardStatus::IN_SCOPE
+                        )
+                        ->action(fn ($record) => $record->update(['status' => StandardStatus::IN_SCOPE]))
+                    ,
+                    Tables\Actions\Action::make('set_out_scope')
+                        ->label('Remove from Scope')
+                        ->icon('heroicon-o-check-circle')
+                        ->modalHeading('Remove from Scope')
+                        ->modalContent(new HtmlString('If you remove this standard from scope, it will no longer
+                        appear in your dashboards and metrics. You will also not be able to audit the standard until 
+                        you set it back in-scope. No data will be modified as a result - this can be undone.<br><br>
+                        Are you sure you want to set this standard in scope?'))
+                        ->modalSubmitActionLabel('Remove from Scope')
+                        ->hidden(
+                            fn ($record) => $record->status !== StandardStatus::IN_SCOPE
+                        )
+                        ->action(fn ($record) => $record->update(['status' => StandardStatus::DRAFT]))
+                    ,
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                ])->label('Actions'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -141,6 +173,7 @@ class StandardResource extends Resource
     {
         return [
             RelationManagers\ControlsRelationManager::class,
+            RelationManagers\AuditsRelationManager::class
         ];
     }
 

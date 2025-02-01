@@ -108,4 +108,12 @@ class Audit extends Model
     {
         return $this->hasMany(FileAttachment::class);
     }
+
+    /**
+     * Get the standard that owns the audit.
+     */
+    public function standard(): BelongsTo
+    {
+        return $this->belongsTo(Standard::class);
+    }
 }
