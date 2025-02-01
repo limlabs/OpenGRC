@@ -159,7 +159,10 @@ class StandardResource extends Resource
                 ]),
             ])
             ->emptyStateHeading(new HtmlString('No Standards Found'))
-            ->emptyStateDescription(new HtmlString('Try creating a new standard or adding one from an <a style="text-decoration: underline" href="bundles">OpenGRC Bundle</a>'));
+            ->emptyStateDescription(
+                new HtmlString("Try creating a new standard or adding one from an <a style='text-decoration: underline' href='"
+                . route('filament.app.resources.bundles.index') .
+                "'>OpenGRC Bundle</a>"));
     }
 
     public static function getWidgets(): array
