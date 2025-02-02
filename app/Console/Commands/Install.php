@@ -85,6 +85,9 @@ class Install extends Command
             }
         }
 
+        $this->call('optimize');
+
+
         // Run the migrations
         $this->info('Creating database tables');
         $this->call('migrate');
