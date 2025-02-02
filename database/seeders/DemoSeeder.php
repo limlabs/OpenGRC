@@ -14,16 +14,31 @@ use App\Models\Control;
 use App\Models\Implementation;
 use App\Models\Risk;
 use App\Models\Standard;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DemoSeeder extends Seeder
 {
+
+    private Faker $faker;
+
+    //constructor
+    public function __construct()
+    {
+        $this->faker = FakerFactory::create();
+    }
+
     /**
      * Run the database demo seeds.
      */
     public function run(): void
     {
+
+        //Create 10 users from factory
+        \App\Models\User::factory(10)->create();
+
         $standard = Standard::create([
             'name' => 'OpenGRC Demo Security Standard 1.0',
             'code' => 'OpenGRC-1.0',
@@ -282,6 +297,25 @@ class DemoSeeder extends Seeder
                 ]
             );
             $audit_item->save();
+
+            //Create a data request and a data request response for each control.
+            $dataRequest = \App\Models\DataRequest::create([
+                'created_by_id' => 1,
+                'assigned_to_id' => rand(1, 10),
+                'audit_id' => $audit->id,
+                'audit_item_id' => $audit_item->id,
+                'status' => 'Pending',
+                'details' => 'Please provide evidence of the implementation of this control',
+            ]);
+
+            //Create a data request response for the $dataRequest and assign to a random user
+            \App\Models\DataRequestResponse::create([
+                'requester_id' => 1,
+                'requestee_id' => rand(1, 10),
+                'data_request_id' => $dataRequest->id,
+                'response' => 'The control is implemented as per the defined standards. The EDR tool is deployed on all workstations and configured for optimal performance. Regular updates and monitoring are in place to ensure effective threat detection and response.',
+            ]);
+
         }
 
         //Close the Audit
@@ -289,11 +323,6 @@ class DemoSeeder extends Seeder
 
         //Create 10 risks from factory
         Risk::factory(10)->create();
-
-
-
-
-
 
 
     }

@@ -292,24 +292,10 @@ class ImplementationResource extends Resource
                     ->getStateUsing(function ($record) {
                         return $record->getEffectiveness();
                     })
-                    //Todo: Implement sorting
-//                        ->sortable(true,
-//                            fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
-//                                $q->orderBy('effectiveness', $direction);
-//                            })
-//                        )
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
                     ->getStateUsing(fn($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
-                    //Todo: Implement sorting
-//                    ->sortable(true,
-//                        function (Builder $query, $direction) {
-//                            $query->whereHas('auditItems', function ($q) use ($direction) {
-//                                $q->orderBy('effectiveness', $direction);
-//                            });
-//                        }
-//                    )
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
                     ->toggleable()
