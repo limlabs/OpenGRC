@@ -75,6 +75,16 @@ class Install extends Command
             'DB_USERNAME' => $db_username,
             'DB_PASSWORD' => $db_password,
         ]);
+        // Manually update the config repository
+        config([
+            'database.default' => $db_driver,
+            "database.connections.$db_driver.host" => $db_host,
+            "database.connections.$db_driver.port" => $db_port,
+            "database.connections.$db_driver.database" => $db_database,
+            "database.connections.$db_driver.username" => $db_username,
+            "database.connections.$db_driver.password" => $db_password,
+        ]);
+
 
         //if sqlite, if the db exists, remove it
         if ($db_driver == 'sqlite') {
