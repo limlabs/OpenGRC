@@ -62,9 +62,11 @@ class Install extends Command
         }
 
         //generate app key
+        $this->info('Generating application security key');
         $this->call('key:generate');
 
         // Update .env with database details
+        $this->info('Updating the .env file');
         $this->updateEnv([
             'DB_CONNECTION' => $db_driver,
             'DB_HOST' => $db_host,
@@ -77,11 +79,14 @@ class Install extends Command
         //if sqlite, if the db exists, remove it
         if ($db_driver == 'sqlite') {
             if (file_exists($db_database)) {
+                $this->info('Removing existing SQLite database');
                 unlink($db_database);
+                touch($db_database);
             }
         }
 
         // Run the migrations
+        $this->info('Creating database tables');
         $this->call('migrate');
 
         // Prompt for Admin user and create
@@ -102,7 +107,7 @@ class Install extends Command
         ]);
 
         // Call Settings and Role/Perms seeders
-        $this->info('Seeding the database');
+        $this->info('Seeding the database with defaults');
         $this->call('db:seed', ['--class' => 'SettingsSeeder']);
         $this->call('db:seed', ['--class' => 'RolePermissionSeeder']);
 
@@ -164,7 +169,7 @@ class Install extends Command
      *
      * @param array $data
      */
-    protected function updateEnv(array $data)
+    protected function updateEnv(array $data): void
     {
         $envPath = base_path('.env');
         $envContent = file_get_contents($envPath);
