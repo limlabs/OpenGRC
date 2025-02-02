@@ -83,6 +83,7 @@ class Install extends Command
             "database.connections.$db_driver.database" => $db_database,
             "database.connections.$db_driver.username" => $db_username,
             "database.connections.$db_driver.password" => $db_password,
+            'app.env'   => 'local',
         ]);
 
 
