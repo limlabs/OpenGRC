@@ -107,12 +107,12 @@ class ImplementationResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('effectiveness')
-                    ->getStateUsing(fn ($record) => $record->getEffectiveness())
+                    ->getStateUsing(fn($record) => $record->getEffectiveness())
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
-                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    ->getStateUsing(fn($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
@@ -133,7 +133,7 @@ class ImplementationResource extends Resource
                 SelectFilter::make('effectiveness')
                     ->options(Effectiveness::class)
                     ->query(function (Builder $query, array $data) {
-                        if (! isset($data['value'])) {
+                        if (!isset($data['value'])) {
                             return $query;
                         }
 
@@ -163,10 +163,10 @@ class ImplementationResource extends Resource
                     ->schema([
                         TextEntry::make('code')
                             ->columnSpan(2)
-                            ->getStateUsing(fn ($record) => "$record->code - $record->title")
+                            ->getStateUsing(fn($record) => "$record->code - $record->title")
                             ->label('Title'),
                         TextEntry::make('effectiveness')
-                            ->getStateUsing(fn ($record) => $record->getEffectiveness())
+                            ->getStateUsing(fn($record) => $record->getEffectiveness())
                             ->badge(),
                         TextEntry::make('status')->badge(),
                         TextEntry::make('details')
@@ -208,7 +208,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param  Implementation  $record
+     * @param Implementation $record
      */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
@@ -216,7 +216,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param  Implementation  $record
+     * @param Implementation $record
      */
     public static function getGlobalSearchResultUrl(Model $record): string
     {
@@ -224,7 +224,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param  Implementation  $record
+     * @param Implementation $record
      */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
@@ -271,6 +271,83 @@ class ImplementationResource extends Resource
                     ->label('Internal Notes')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'These notes are for internal use only and will not be shared with auditors.')
                     ->maxLength(4096),
+            ]);
+    }
+
+
+    public static function getTable(Table $table): Table
+    {
+        return $table
+            ->recordTitleAttribute('details')
+            ->columns([
+                Tables\Columns\TextColumn::make('code')
+                    ->toggleable()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('title')
+                    ->toggleable()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('effectiveness')
+                    ->getStateUsing(function ($record) {
+                        return $record->getEffectiveness();
+                    })
+                    //Todo: Implement sorting
+//                        ->sortable(true,
+//                            fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
+//                                $q->orderBy('effectiveness', $direction);
+//                            })
+//                        )
+                    ->badge(),
+                Tables\Columns\TextColumn::make('last_assessed')
+                    ->label('Last Audit')
+                    ->getStateUsing(fn($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    //Todo: Implement sorting
+//                    ->sortable(true,
+//                        function (Builder $query, $direction) {
+//                            $query->whereHas('auditItems', function ($q) use ($direction) {
+//                                $q->orderBy('effectiveness', $direction);
+//                            });
+//                        }
+//                    )
+                    ->badge(),
+                Tables\Columns\TextColumn::make('status')
+                    ->toggleable()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                SelectFilter::make('status')->options(ImplementationStatus::class),
+                SelectFilter::make('effectiveness')
+                    ->options(Effectiveness::class)
+                    ->query(function (Builder $query, array $data) {
+                        if (!isset($data['value'])) {
+                            return $query;
+                        }
+
+                        return $query->whereHas('auditItems', function ($q) use ($data) {
+                            $q->where('effectiveness', $data['value']);
+                        });
+                    }),
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
             ]);
     }
 

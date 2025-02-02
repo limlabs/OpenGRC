@@ -26,6 +26,7 @@ class RiskFactory extends Factory
 
         return [
             'name' => $this->faker->sentence,
+            'code' => $this->faker->unique()->numberBetween(1000, 9999),
             'description' => $this->faker->paragraph,
             'status' => $risk_status,
             'inherent_likelihood' => $inherent_likelihood,

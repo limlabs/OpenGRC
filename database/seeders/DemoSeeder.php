@@ -6,11 +6,13 @@ use App\Enums\Applicability;
 use App\Enums\Effectiveness;
 use App\Enums\ImplementationStatus;
 use App\Enums\WorkflowStatus;
+use App\Filament\Resources\AuditResource;
 use App\Http\Controllers\HelperController;
 use App\Models\Audit;
 use App\Models\AuditItem;
 use App\Models\Control;
 use App\Models\Implementation;
+use App\Models\Risk;
 use App\Models\Standard;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -281,5 +283,20 @@ class DemoSeeder extends Seeder
             );
             $audit_item->save();
         }
+
+        //Close the Audit
+        AuditResource::completeAudit($audit);
+
+        //Create 10 risks from factory
+        Risk::factory(10)->create();
+
+
+
+
+
+
+
     }
+
+
 }

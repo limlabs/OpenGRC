@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Effectiveness;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource\Pages;
 use App\Filament\Resources\AuditResource\RelationManagers;
 use App\Filament\Resources\AuditResource\Widgets\AuditStatsWidget;
 use App\Models\Audit;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -32,11 +34,6 @@ class AuditResource extends Resource
 
     protected static ?int $navigationSort = 40;
 
-    public static function label(): string
-    {
-        return 'Audits';
-    }
-
     public static function form(Form $form): Form
     {
         return $form;
@@ -53,7 +50,7 @@ class AuditResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('audit_type')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->formatStateUsing(fn($state) => ucfirst($state))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->sortable()
@@ -98,6 +95,11 @@ class AuditResource extends Resource
             ]);
     }
 
+    public static function label(): string
+    {
+        return 'Audits';
+    }
+
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
@@ -120,7 +122,7 @@ class AuditResource extends Resource
 
     public static function getRelations(): array
     {
-        if (! request()->routeIs('filament.app.resources.audits.edit')) {
+        if (!request()->routeIs('filament.app.resources.audits.edit')) {
             return [
                 RelationManagers\AuditItemRelationManager::class,
                 RelationManagers\DataRequestsRelationManager::class,
@@ -155,5 +157,39 @@ class AuditResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function completeAudit(Audit $audit): void
+    {
+        foreach ($audit->auditItems as $auditItem) {
+            // If the audit item is not completed, mark it as completed
+            $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
+
+            // We don't want to overwrite the effectiveness if it's already set AND we're not assessing
+            if ($auditItem->effectiveness !== Effectiveness::UNKNOWN) {
+
+                $updateData = ['effectiveness' => $auditItem->effectiveness->value];
+
+                if ($auditItem->auditable_type == 'App\Models\Control') {
+                    $updateData['applicability'] = $auditItem->applicability->value;
+                }
+
+                $auditItem->auditable->update($updateData);
+            }
+        }
+
+        // Save the final audit report
+        $auditItems = $audit->auditItems;
+        $reportTemplate = 'reports.audit';
+        if ($audit->audit_type == 'implementations') {
+            $reportTemplate = 'reports.implementation-report';
+        }
+        $filepath = "app/private/audit_reports/AuditReport-{$audit->id}.pdf";
+        $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
+        $pdf->save(storage_path($filepath));
+
+        // Mark the audit as completed
+        $audit->update(['status' => WorkflowStatus::COMPLETED]);
+
     }
 }
