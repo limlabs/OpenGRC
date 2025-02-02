@@ -101,7 +101,7 @@ class Install extends Command
 
         // Run the migrations
         $this->info('Creating database tables');
-        $this->call('migrate');
+        $this->call('migrate --force');
 
         // Prompt for Admin user and create
         $email = text(
