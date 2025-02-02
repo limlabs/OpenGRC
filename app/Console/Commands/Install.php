@@ -81,8 +81,8 @@ class Install extends Command
             if (file_exists($db_database)) {
                 $this->info('Removing existing SQLite database');
                 unlink($db_database);
-                touch($db_database);
             }
+            touch($db_database);
         }
 
         $this->call('optimize');
