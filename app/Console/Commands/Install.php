@@ -85,6 +85,8 @@ class Install extends Command
             touch($db_database);
         }
 
+        //reload the .env
+        $this->call('config:clear');
 
         // Run the migrations
         $this->info('Creating database tables');
