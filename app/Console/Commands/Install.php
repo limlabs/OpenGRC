@@ -85,8 +85,6 @@ class Install extends Command
             touch($db_database);
         }
 
-        $this->call('optimize');
-
 
         // Run the migrations
         $this->info('Creating database tables');
