@@ -37,10 +37,10 @@ class FileAttachmentResource extends Resource
 
                         return 'attachments/'.$rand;
                     })
-                    ->downloadable(true)
+                    ->downloadable()
                     ->visibility('private')
                     ->openable()
-                    ->deletable(true)
+                    ->deletable()
                     ->reorderable()
                     ->columnSpanFull()
                     ->required(),
@@ -55,7 +55,7 @@ class FileAttachmentResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->html()
-                    ->limit(100)
+                    ->limit()
                     ->wrap(),
                 Tables\Columns\TextColumn::make('file_path')
                     ->searchable()

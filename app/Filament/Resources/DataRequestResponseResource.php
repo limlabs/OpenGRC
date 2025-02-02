@@ -6,6 +6,7 @@ use App\Enums\ResponseStatus;
 use App\Filament\Resources\DataRequestResponseResource\Pages;
 use App\Models\DataRequestResponse;
 use Carbon\Carbon;
+use Exception;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
@@ -72,7 +73,7 @@ class DataRequestResponseResource extends Resource
                         Repeater::make('attachments')
                             ->relationship('attachments')
                             ->columnSpanFull()
-                            ->columns(2)
+                            ->columns()
                             ->schema([
                                 Textarea::make('description'),
                                 FileUpload::make('file_path')
@@ -85,7 +86,7 @@ class DataRequestResponseResource extends Resource
                                     ->storeFileNamesIn('file_name')
                                     ->visibility('private')
                                     ->openable()
-                                    ->deletable(true)
+                                    ->deletable()
                                     ->reorderable(),
 
                                 Hidden::make('uploaded_by')
@@ -102,6 +103,9 @@ class DataRequestResponseResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table

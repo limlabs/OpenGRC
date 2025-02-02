@@ -1,5 +1,10 @@
 <?php
 
+use App\Enums\Applicability;
+use App\Enums\ControlCategory;
+use App\Enums\ControlEnforcementCategory;
+use App\Enums\ControlType;
+use App\Enums\Effectiveness;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,11 +24,11 @@ return new class extends Migration
             $table->longText('description');
             $table->longText('discussion')->nullable();
             $table->longText('test')->nullable();
-            $table->string('type')->default(\App\Enums\ControlType::OTHER);
-            $table->string('category')->default(\App\Enums\ControlCategory::OTHER);
-            $table->string('enforcement')->default(\App\Enums\ControlEnforcementCategory::MANDATORY);
-            $table->string('effectiveness')->default(\App\Enums\Effectiveness::UNKNOWN);
-            $table->string('applicability')->default(\App\Enums\Applicability::UNKNOWN);
+            $table->string('type')->default(ControlType::OTHER);
+            $table->string('category')->default(ControlCategory::OTHER);
+            $table->string('enforcement')->default(ControlEnforcementCategory::MANDATORY);
+            $table->string('effectiveness')->default(Effectiveness::UNKNOWN);
+            $table->string('applicability')->default(Applicability::UNKNOWN);
             $table->softDeletes();
             $table->timestamps();
 

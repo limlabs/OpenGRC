@@ -12,6 +12,7 @@ use App\Filament\Resources\ControlResource\Pages;
 use App\Filament\Resources\ControlResource\RelationManagers;
 use App\Models\Control;
 use App\Models\Standard;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
@@ -24,6 +25,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 
 class ControlResource extends Resource
 {
@@ -81,9 +83,15 @@ class ControlResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
+            ->emptyStateHeading('No Controls Added Yet')
+            ->emptyStateDescription(new HtmlString("There are no controls to display. Try adding new controls to your existing 
+            standards. You can also import standards and controls with using <a class='text-blue-500' href='" . route("filament.app.resources.bundles.index") . "'>Content Bundles</a>."))
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->sortable()
@@ -148,10 +156,6 @@ class ControlResource extends Resource
                 Tables\Filters\SelectFilter::make('applicability')
                     ->options(Applicability::class)
                     ->label('Applicability'),
-            ])
-            ->actions([
-//                Tables\Actions\ViewAction::make(),
-//                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -230,7 +234,7 @@ class ControlResource extends Resource
      */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
-        return "{$record->code} - {$record->title}";
+        return "$record->code - $record->title";
     }
 
     /**

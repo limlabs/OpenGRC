@@ -45,6 +45,8 @@ class AuditResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->emptyStateHeading('No Audits Created')
+            ->emptyStateDescription('Try creating a new audit by clicking the "Create an Audit" button above to get started!')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->sortable()

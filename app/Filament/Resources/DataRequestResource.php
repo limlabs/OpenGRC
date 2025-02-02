@@ -155,7 +155,7 @@ class DataRequestResource extends Resource
                             ->label('Responses')
                             ->relationship('responses')
                             ->addable(false)
-                            ->columns(2)
+                            ->columns()
                             ->deletable(false)
                             ->schema([
                                 Select::make('requestee_id')

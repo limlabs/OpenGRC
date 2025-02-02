@@ -26,6 +26,9 @@ class BundleResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
+    /**
+     * @throws \Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
@@ -80,7 +83,7 @@ class BundleResource extends Resource
             ])
             ->contentGrid(['md' => 2, 'xl' => 3])
             ->paginationPageOptions([9, 18, 27])
-            ->defaultSort('code', 'asc')
+            ->defaultSort('code')
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->button()
@@ -107,7 +110,7 @@ class BundleResource extends Resource
                     ->action(function (Bundle $record) {
                         Notification::make()
                             ->title('Import Started')
-                            ->body("Importing bundle with code: {$record->code}")
+                            ->body("Importing bundle with code: $record->code")
                             ->send();
                         BundleController::importBundle($record);
                     }),

@@ -8,6 +8,7 @@ use App\Filament\Resources\ImplementationResource\Pages;
 use App\Filament\Resources\ImplementationResource\RelationManagers;
 use App\Models\Control;
 use App\Models\Implementation;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
@@ -62,7 +63,7 @@ class ImplementationResource extends Resource
                     ->relationship('controls', 'code')
                     ->options(
                         Control::all()->mapWithKeys(function ($control) {
-                            return [$control->id => "({$control->code}) - {$control->title}"];
+                            return [$control->id => "($control->code) - $control->title"];
                         })->toArray()
                     )
                     ->searchable()
@@ -88,9 +89,14 @@ class ImplementationResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
+            ->emptyStateHeading('No implementations found')
+            ->emptyStateDescription('Try creating a new implementation by clicking the "Create Implementation" button above.')
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->toggleable()
@@ -102,12 +108,12 @@ class ImplementationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('effectiveness')
                     ->getStateUsing(fn ($record) => $record->getEffectiveness())
-                    ->sortable(true)
+                    ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
                     ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
-                    ->sortable(true)
+                    ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
                     ->toggleable()
@@ -157,7 +163,7 @@ class ImplementationResource extends Resource
                     ->schema([
                         TextEntry::make('code')
                             ->columnSpan(2)
-                            ->getStateUsing(fn ($record) => "{$record->code} - {$record->title}")
+                            ->getStateUsing(fn ($record) => "$record->code - $record->title")
                             ->label('Title'),
                         TextEntry::make('effectiveness')
                             ->getStateUsing(fn ($record) => $record->getEffectiveness())
@@ -206,7 +212,7 @@ class ImplementationResource extends Resource
      */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
-        return "{$record->code} - {$record->title}";
+        return "$record->code - $record->title";
     }
 
     /**
@@ -235,7 +241,6 @@ class ImplementationResource extends Resource
     public static function getForm(Form $form): Form
     {
         return $form
-            ->columns(2)
             ->schema([
                 Forms\Components\TextInput::make('code')
                     ->required()

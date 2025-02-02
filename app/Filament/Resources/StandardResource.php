@@ -6,6 +6,7 @@ use App\Enums\StandardStatus;
 use App\Filament\Resources\StandardResource\Pages;
 use App\Filament\Resources\StandardResource\RelationManagers;
 use App\Models\Standard;
+use Exception;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -72,7 +73,7 @@ class StandardResource extends Resource
                     ->maxLength(255)
                     ->url()
                     ->placeholder('e.g. https://www.cisecurity.org/controls/')
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter the URL of the offical standard document.'),
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter the URL of the official standard document.'),
                 RichEditor::make('description')
                     ->columnSpanFull()
                     ->maxLength(65535)
@@ -82,6 +83,9 @@ class StandardResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table

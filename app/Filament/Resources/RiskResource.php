@@ -27,7 +27,7 @@ class RiskResource extends Resource
     {
 
         return $form
-            ->columns(2)
+            ->columns()
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
@@ -169,7 +169,7 @@ class RiskResource extends Resource
      */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
-        return "{$record->name}";
+        return "$record->name";
     }
 
     /**

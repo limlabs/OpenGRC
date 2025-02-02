@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Mail\UserCreatedMail;
 use App\Mail\UserForceResetMail;
 use App\Models\User;
+use Exception;
 use Faker\Factory;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -60,6 +61,9 @@ class UserResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
