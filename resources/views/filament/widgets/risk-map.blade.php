@@ -81,7 +81,7 @@
             <!-- Placeholder for the Impact label column -->
             <div class="w-10"></div>
             <!-- Placeholder for row labels column -->
-            <div class="w-20"></div>
+            <div class="w-10"></div>
 
             <!-- 5-col bottom grid -->
             <div class="flex-1">
