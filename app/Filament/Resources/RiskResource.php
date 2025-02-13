@@ -124,14 +124,14 @@ class RiskResource extends Resource
                     ->label('Inherent Risk')
                     ->sortable()
                     ->color(function (Risk $record) {
-                        return self::getRiskColor($record->inherent_likelihood, $record->inherent_risk);
+                        return self::getRiskColor($record->inherent_likelihood, $record->inherent_impact);
                     })
                     ->badge(),
                 Tables\Columns\TextColumn::make('residual_risk')
                     ->sortable()
                     ->badge()
                     ->color(function (Risk $record) {
-                        return self::getRiskColor($record->residual_likelihood, $record->residual_risk);
+                        return self::getRiskColor($record->residual_likelihood, $record->residual_impact);
                     }),
             ])
             ->filters([])
@@ -195,16 +195,22 @@ class RiskResource extends Resource
         return ['name', 'description'];
     }
 
+    //Mentioning the following classes to prevent them from being removed.
+    //bg-grcblue-200 bg-red-200 bg-orange-200 bg-yellow-200 bg-green-200
+    //bg-grcblue-500 bg-red-500 bg-orange-500 bg-yellow-500 bg-green-500
+
     public static function getRiskColor(int $likelihood, int $impact, int $weight = 200): string
     {
         $average = round(($likelihood + $impact) / 2);
 
-        if ($average >= 4) {
+        if ($average >= 5) {
             return "bg-red-$weight"; // High risk
-        } elseif ($average >= 3) {
+        } elseif ($average >= 4) {
             return "bg-orange-$weight"; // Moderate-High risk
-        } elseif ($average >= 2) {
+        } elseif ($average >= 3) {
             return "bg-yellow-$weight"; // Moderate risk
+        } elseif ($average >= 2) {
+            return "bg-grcblue-$weight"; // Moderate risk
         } else {
             return "bg-green-$weight"; // Low risk
         }
