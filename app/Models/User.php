@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\ResponseStatus;
 use App\Traits\Concerns\HasSuperAdmin;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -59,4 +61,18 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsToMany(Audit::class);
     }
+
+    public function todos(): HasMany
+    {
+        return $this->hasMany(DataRequestResponse::class, 'requestee_id');
+    }
+
+    public function openTodos(): HasMany
+    {
+        return $this->hasMany(DataRequestResponse::class, 'requestee_id')
+            ->where('status', ResponseStatus::PENDING)
+            ->orWhere('status', ResponseStatus::REJECTED);
+    }
+
+
 }

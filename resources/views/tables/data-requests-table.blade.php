@@ -37,7 +37,7 @@
                     @endisset
 
                 </td>
-                <td class="border px-4 py-2"> {!! $request->status !!} </td>
+                <td class="border px-4 py-2"> {!! $request->responses->first()->status->value !!} </td>
             </tr>
         @endforeach
 

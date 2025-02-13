@@ -21,11 +21,7 @@ class ToDo extends Page implements Tables\Contracts\HasTable
 
     public static function getNavigationBadge(): ?string
     {
-        $count = DataRequestResponse::where('requestee_id', auth()->id())
-            ->where('status', ResponseStatus::PENDING)
-            ->orWhere('status', ResponseStatus::REJECTED)
-            ->count();
-
+        $count = auth()->user()->openTodos()->count();
 
         if ($count > 99) {
             return '99+';
