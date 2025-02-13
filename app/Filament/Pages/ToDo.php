@@ -19,6 +19,24 @@ class ToDo extends Page implements Tables\Contracts\HasTable
 
     protected static string $view = 'filament.pages.to-do';
 
+    public static function getNavigationBadge(): ?string
+    {
+        $count = DataRequestResponse::where('requestee_id', auth()->id())
+            ->where('status', ResponseStatus::PENDING)
+            ->orWhere('status', ResponseStatus::REJECTED)
+            ->count();
+
+
+        if ($count > 99) {
+            return '99+';
+        } else if ($count > 0) {
+            return $count;
+        }
+
+        return null;
+
+    }
+
     protected function getTableQuery(): Builder
     {
         return DataRequestResponse::query()->where('requestee_id', auth()->id());
