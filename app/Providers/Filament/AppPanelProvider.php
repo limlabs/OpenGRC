@@ -21,8 +21,6 @@ use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
 
-// use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
-
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
