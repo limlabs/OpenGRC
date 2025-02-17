@@ -30,11 +30,6 @@ return [
             'icon' => 'heroicon-o-lock-closed',
             'color' => 'primary',
         ],
-        'microsoft' => [
-            'label' => 'Microsoft',
-            'icon' => 'heroicon-o-window',
-            'color' => 'primary',
-        ],
         'azure' => [
             'label' => 'Azure AD',
             'icon' => 'heroicon-o-cloud',
