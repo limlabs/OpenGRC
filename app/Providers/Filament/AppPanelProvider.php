@@ -22,51 +22,62 @@ use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use App\Models\User;
+use App\Models\Settings;
 
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        // Temporarily use hardcoded values during setup
+        $brandName = 'OpenGRC';
+        $brandLogo = null;
+
         $socialProviders = [];
         
-        if (setting('auth.okta.enabled')) {
-            $socialProviders['okta'] = [
-                'label' => 'Okta',
-                'icon' => 'heroicon-o-lock-closed',
-                'color' => 'primary',
-            ];
-        }
-        
-        if (setting('auth.microsoft.enabled')) {
-            $socialProviders['microsoft'] = [
-                'label' => 'Microsoft',
-                'icon' => 'heroicon-o-window',
-                'color' => 'primary',
-            ];
-        }
-        
-        if (setting('auth.azure.enabled')) {
-            $socialProviders['azure'] = [
-                'label' => 'Azure AD',
-                'icon' => 'heroicon-o-cloud',
-                'color' => 'primary',
-            ];
-        }
+        // Comment out or wrap all settings() calls in try-catch
+        try {
+            if (setting('auth.okta.enabled')) {
+                $socialProviders['okta'] = [
+                    'label' => 'Okta',
+                    'icon' => 'heroicon-o-lock-closed',
+                    'color' => 'primary',
+                ];
+            }
+            
+            if (setting('auth.microsoft.enabled')) {
+                $socialProviders['microsoft'] = [
+                    'label' => 'Microsoft',
+                    'icon' => 'heroicon-o-window',
+                    'color' => 'primary',
+                ];
+            }
+            
+            if (setting('auth.azure.enabled')) {
+                $socialProviders['azure'] = [
+                    'label' => 'Azure AD',
+                    'icon' => 'heroicon-o-cloud',
+                    'color' => 'primary',
+                ];
+            }
 
-        if (setting('auth.google.enabled')) {
-            $socialProviders['google'] = [
-                'label' => 'Google',
-                'icon' => 'heroicon-o-globe-alt',
-                'color' => 'primary',
-            ];
-        }
+            if (setting('auth.google.enabled')) {
+                $socialProviders['google'] = [
+                    'label' => 'Google',
+                    'icon' => 'heroicon-o-globe-alt',
+                    'color' => 'primary',
+                ];
+            }
 
-        if (setting('auth.auth0.enabled')) {
-            $socialProviders['auth0'] = [
-                'label' => 'Auth0',
-                'icon' => 'heroicon-o-lock-closed',
-                'color' => 'primary',
-            ];
+            if (setting('auth.auth0.enabled')) {
+                $socialProviders['auth0'] = [
+                    'label' => 'Auth0',
+                    'icon' => 'heroicon-o-lock-closed',
+                    'color' => 'primary',
+                ];
+            }
+
+        } catch (\Exception $e) {
+            // Silently fail and use empty social providers during setup
         }
 
         return $panel
@@ -78,7 +89,8 @@ class AppPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Slate,
             ])
-            ->brandLogo(fn () => view('filament.admin.logo'))
+            ->brandName($brandName)
+            ->brandLogo($brandLogo)
             ->globalSearch(true)
             ->readOnlyRelationManagersOnResourceViewPagesByDefault(false)
             ->viteTheme('resources/css/filament/app/theme.css')
