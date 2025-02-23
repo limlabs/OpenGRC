@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\ControlResource\Pages;
+namespace App\Filament\Resources\ProgramResource\Pages;
 
-use App\Filament\Resources\ControlResource;
+use App\Filament\Resources\ProgramResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListControls extends ListRecords
+class ListPrograms extends ListRecords
 {
-    protected static string $resource = ControlResource::class;
+    protected static string $resource = ProgramResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -16,4 +16,4 @@ class ListControls extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-}
+} 
