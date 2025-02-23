@@ -28,10 +28,6 @@ class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        // Temporarily use hardcoded values during setup
-        $brandName = 'OpenGRC';
-        $brandLogo = null;
-
         $socialProviders = [];
         
         // Comment out or wrap all settings() calls in try-catch
@@ -89,8 +85,8 @@ class AppPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Slate,
             ])
-            ->brandName($brandName)
-            ->brandLogo($brandLogo)
+            ->brandName("OpenGRC")
+            ->brandLogo(fn () => view('filament.admin.logo'))
             ->globalSearch(true)
             ->readOnlyRelationManagersOnResourceViewPagesByDefault(false)
             ->viteTheme('resources/css/filament/app/theme.css')

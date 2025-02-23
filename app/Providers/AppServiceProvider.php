@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
             if (Schema::hasTable('settings')) {
 
                 Config::set('app.name', setting('general.name', 'OpenGRC'));
-                Config::set('app.url', setting('general.url', 'https://localhost'));
+                Config::set('app.url', setting('general.url', 'https://opengrc.test'));
 
                 config()->set('mail', array_merge(config('mail'), [
                     'driver' => 'smtp',
