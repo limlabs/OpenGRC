@@ -41,8 +41,9 @@
                 <div class="flex-1">
                     <div class="grid grid-cols-5 gap-0.5 h-full w-full">
                         @foreach (array_reverse($grid) as $impactIndex => $impactRow)
-                            @foreach ($impactRow as $likelihoodIndex => $count)
+                            @foreach ($impactRow as $likelihoodIndex => $risks)
                                 @php
+                                    $count = count($risks);
                                     $colorWeight = 200;
                                     if($count > 0) {
                                         $colorWeight = 500;
@@ -63,9 +64,14 @@
                                             <div
                                                     x-show="show"
                                                     x-cloak
-                                                    class="absolute z-10 bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-1/2 transform -translate-x-1/2 shadow-lg"
+                                                    class="absolute z-10 bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-1/2 transform -translate-x-1/2 shadow-lg whitespace-normal max-w-xs overflow-y-auto max-h-48"
                                             >
-                                                {{ $count }} Items
+                                                <div class="font-medium">Risks:</div>
+                                                <ul class="list-disc list-outside pl-4 mt-1 space-y-0.5">
+                                                @foreach($risks as $risk)
+                                                    <li class="ml-0">{{ $risk->name }}</li>
+                                                @endforeach
+                                                </ul>
                                             </div>
                                         </div>
                                     @endif
@@ -77,7 +83,7 @@
             </div>
         </div>
 
-        <!-- Bottom row(s): same placeholders + a 5-col grid for both the labels and “Likelihood” -->
+        <!-- Bottom row(s): same placeholders + a 5-col grid for both the labels and "Likelihood" -->
         <div class="flex mt-2">
             <!-- Placeholder for the Impact label column -->
             <div class="w-10"></div>
@@ -87,14 +93,14 @@
             <!-- 5-col bottom grid -->
             <div class="flex-1">
                 <div class="grid grid-cols-5 gap-0.5 text-center w-full">
-                    <!-- First row: the 5 “Likelihood” labels -->
+                    <!-- First row: the 5 "Likelihood" labels -->
                     <div class="text-xs">Very Low</div>
                     <div class="text-xs">Low</div>
                     <div class="text-xs">Moderate</div>
                     <div class="text-xs">High</div>
                     <div class="text-xs">Very High</div>
 
-                    <!-- Second row: leave columns 1,2 & 4,5 blank; put “Likelihood” in column 3 -->
+                    <!-- Second row: leave columns 1,2 & 4,5 blank; put "Likelihood" in column 3 -->
                     <div></div>
                     <div></div>
                     <div class="text-sm font-bold">Likelihood</div>

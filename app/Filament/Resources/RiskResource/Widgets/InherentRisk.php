@@ -24,7 +24,7 @@ class InherentRisk extends Widget
 
     public static function generateGrid(Collection $risks, string $type): array
     {
-        $grid = array_fill(0, 5, array_fill(0, 5, 0));
+        $grid = array_fill(0, 5, array_fill(0, 5, []));
 
         foreach ($risks as $risk) {
             if ($type == 'inherent') {
@@ -36,7 +36,7 @@ class InherentRisk extends Widget
             }
 
             if (isset($grid[$impactIndex][$likelihoodIndex])) {
-                $grid[$impactIndex][$likelihoodIndex]++;
+                $grid[$impactIndex][$likelihoodIndex][] = $risk;
             }
         }
 
