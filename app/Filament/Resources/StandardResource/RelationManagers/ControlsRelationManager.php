@@ -56,6 +56,7 @@ class ControlsRelationManager extends RelationManager
                 ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->wrap()
+                    ->html()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->html()
