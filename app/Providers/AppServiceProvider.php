@@ -32,9 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 Config::set('app.name', setting('general.name', 'OpenGRC'));
                 Config::set('app.url', setting('general.url', 'https://opengrc.test'));
 
-                config()->set('mail', array_merge(config('mail'), [
-                    'driver' => 'smtp',
-                    'transport' => 'smtp',
+                $mailConfig = [
                     'host' => setting('mail.host'),
                     'username' => setting('mail.username'),
                     'password' => setting('mail.password'),
@@ -44,7 +42,14 @@ class AppServiceProvider extends ServiceProvider
                         'address' => setting('mail.from'),
                         'name' => setting('general.name'),
                     ],
-                ]));
+                ];
+                
+                // Only set transport if it's not already set or if we have a setting for it
+                if (setting('mail.mailer', null) !== null) {
+                    $mailConfig['transport'] = setting('mail.mailer');
+                }
+                
+                config()->set('mail', array_merge(config('mail'), $mailConfig));
 
                 // Set session lifetime from settings
                 Config::set('session.lifetime', setting('security.session_timeout', 15));

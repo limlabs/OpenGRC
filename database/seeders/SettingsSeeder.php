@@ -49,6 +49,10 @@ class SettingsSeeder extends Seeder
                 'value' => 'no-reply@opengrc.com',
             ],
             [
+                'key' => 'mail.mailer',
+                'value' => 'smtp',
+            ],
+            [
                 'key' => 'mail.templates.password_reset_subject',
                 'value' => 'OpenGRC Password Reset',
             ],

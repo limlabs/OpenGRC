@@ -10,22 +10,40 @@ class MailSchema
     public static function schema(): array
     {
         return [
-            TextInput::make('mail.host'),
+            Select::make('mail.mailer')
+                ->label('Mail Provider')
+                ->options([
+                    'smtp' => 'SMTP',
+                    'ses' => 'Amazon SES',
+                    'sendmail' => 'Sendmail',
+                    'mailgun' => 'Mailgun',
+                    'postmark' => 'Postmark',
+                    'log' => 'Log',
+                    'array' => 'Array',
+                ])
+                ->default('smtp')
+                ->helperText('Select the mail service provider to use'),
+            TextInput::make('mail.host')
+                ->helperText('Only required for SMTP'),
             TextInput::make('mail.port')
-                ->type('number'),
+                ->type('number')
+                ->helperText('Only required for SMTP'),
             Select::make('mail.encryption')
                 ->options([
                     'TLS' => 'TLS',
                     'STARTTLS' => 'STARTTLS',
                     'none' => 'None',
-                ]),
-            TextInput::make('mail.username'),
+                ])
+                ->helperText('Only required for SMTP'),
+            TextInput::make('mail.username')
+                ->helperText('Only required for SMTP'),
             TextInput::make('mail.password')
-                ->password(),
+                ->password()
+                ->helperText('Only required for SMTP'),
             TextInput::make('mail.from')
                 ->label('From Address')
                 ->email()
                 ->helperText('The email address to send emails from'),
         ];
     }
-} 
+}  
