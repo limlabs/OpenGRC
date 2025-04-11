@@ -38,7 +38,7 @@ return [
         ],
     ],
     'table' => [
-        'description' => 'Los controles son medidas específicas de seguridad que implementamos.',
+        'description' => 'Los controles son el \'cómo\' de la implementación de la seguridad: son los mecanismos, políticas, procedimientos y herramientas específicas utilizadas para hacer cumplir los estándares y proteger los activos. Los controles pueden ser técnicos (como firewalls o cifrado), administrativos (como políticas o capacitación), o físicos (como cámaras de seguridad o cerraduras de puertas). Cada control debe estar diseñado para abordar riesgos específicos y cumplir con requisitos de seguridad particulares definidos por los estándares. Por ejemplo, para cumplir con un estándar que requiere transmisión segura de datos, un control podría especificar el uso de TLS 1.2 o superior para todas las comunicaciones externas. Los controles son la manifestación práctica de los estándares de seguridad y forman la columna vertebral de la infraestructura de seguridad de una organización.',
         'empty_state' => [
             'heading' => 'No se encontraron controles',
             'description' => 'Comience importando un paquete de controles o creando un nuevo control.',

@@ -38,7 +38,7 @@ return [
         ],
     ],
     'table' => [
-        'description' => 'Controls represent the specific security measures implemented within your organization.',
+        'description' => 'Controls are the \'how\' of security implementation - they are the specific mechanisms, policies, procedures, and tools used to enforce standards and protect assets. Controls can be technical (like firewalls or encryption), administrative (like policies or training), or physical (like security cameras or door locks). Each control should be designed to address specific risks and meet particular security requirements defined by standards. For instance, to meet a standard requiring secure data transmission, a control might specify the use of TLS 1.2 or higher for all external communications. Controls are the practical manifestation of security standards and form the backbone of an organization\'s security infrastructure.',
         'empty_state' => [
             'heading' => 'No controls found',
             'description' => 'Get started by importing a standard bundle or creating a new control.',

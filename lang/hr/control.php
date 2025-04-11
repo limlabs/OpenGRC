@@ -38,7 +38,7 @@ return [
         ],
     ],
     'table' => [
-        'description' => 'Kontrole predstavljaju specifične sigurnosne mjere implementirane unutar vaše organizacije.',
+        'description' => 'Kontrole predstavljaju \'kako\' u implementaciji sigurnosti - to su specifični mehanizmi, politike, procedure i alati koji se koriste za provođenje standarda i zaštitu imovine. Kontrole mogu biti tehničke (poput vatrozida ili enkripcije), administrativne (poput politika ili obuke), ili fizičke (poput sigurnosnih kamera ili brava na vratima). Svaka kontrola treba biti dizajnirana za rješavanje specifičnih rizika i ispunjavanje posebnih sigurnosnih zahtjeva definiranih standardima. Na primjer, kako bi se zadovoljio standard koji zahtijeva sigurni prijenos podataka, kontrola može specificirati korištenje TLS 1.2 ili novije verzije za svu vanjsku komunikaciju. Kontrole su praktična manifestacija sigurnosnih standarda i čine okosnicu sigurnosne infrastrukture organizacije.',
         'empty_state' => [
             'heading' => 'Nisu pronađene kontrole',
             'description' => 'Započnite uvozom paketa standarda ili kreiranjem nove kontrole.',

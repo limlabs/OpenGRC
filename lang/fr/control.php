@@ -38,7 +38,7 @@ return [
         ],
     ],
     'table' => [
-        'description' => 'Les contrôles représentent les mesures de sécurité spécifiques mises en œuvre au sein de votre organisation.',
+        'description' => 'Les contrôles représentent le \'comment\' de la mise en œuvre de la sécurité - ce sont les mécanismes, politiques, procédures et outils spécifiques utilisés pour appliquer les normes et protéger les actifs. Les contrôles peuvent être techniques (comme les pare-feu ou le chiffrement), administratifs (comme les politiques ou la formation), ou physiques (comme les caméras de sécurité ou les serrures de porte). Chaque contrôle doit être conçu pour répondre à des risques spécifiques et satisfaire aux exigences de sécurité particulières définies par les normes. Par exemple, pour répondre à une norme exigeant une transmission sécurisée des données, un contrôle pourrait spécifier l\'utilisation de TLS 1.2 ou supérieur pour toutes les communications externes. Les contrôles sont la manifestation pratique des normes de sécurité et constituent l\'épine dorsale de l\'infrastructure de sécurité d\'une organisation.',
         'empty_state' => [
             'heading' => 'Aucun contrôle trouvé',
             'description' => 'Commencez par importer un ensemble de standards ou créer un nouveau contrôle.',
