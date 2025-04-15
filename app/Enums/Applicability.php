@@ -10,6 +10,7 @@ enum Applicability: string implements HasColor, HasLabel
     case APPLICABLE = 'Applicable';
     case NOTAPPLICABLE = 'Not Applicable';
     case PARTIALLYAPPLICABLE = 'Partially Applicable';
+    case UNKNOWN = 'Unknown';
 
     public function getLabel(): ?string
     {
@@ -17,6 +18,7 @@ enum Applicability: string implements HasColor, HasLabel
             self::APPLICABLE => __('enums.applicability.applicable'),
             self::NOTAPPLICABLE => __('enums.applicability.not_applicable'),
             self::PARTIALLYAPPLICABLE => __('enums.applicability.partially_applicable'),
+            self::UNKNOWN => __('enums.applicability.unknown'),
         };
     }
 
@@ -26,6 +28,7 @@ enum Applicability: string implements HasColor, HasLabel
             self::APPLICABLE => 'success',
             self::NOTAPPLICABLE => 'danger',
             self::PARTIALLYAPPLICABLE => 'warning',
+            self::UNKNOWN => 'secondary',
         };
     }
 }

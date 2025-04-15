@@ -17,6 +17,7 @@ return [
         'applicable' => 'Applicable',
         'not_applicable' => 'Not Applicable',
         'partially_applicable' => 'Partially Applicable',
+        'unknown' => 'Unknown',
     ],
     'control_category' => [
         'preventive' => 'Preventive',
