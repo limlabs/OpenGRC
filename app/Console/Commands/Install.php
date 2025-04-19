@@ -184,18 +184,20 @@ class Install extends Command
         exec('npm install && npm run build');
 
         // Set starter filesystem permissions.
-        $this->info('Setting filesystem permissions');
-        exec('find . -type f -print0 | xargs --null sudo chmod 666');
-        exec('find . -type d -print0 | xargs --null sudo chmod 775');
-        exec('sudo chmod 777 set_permissions');
-        exec('sudo chmod 777 artisan');
-        exec('sudo chmod 777 artisan');
-        exec('sudo chmod 777 install.sh');
-        exec('sudo chmod 777 vendor/bin/*');
-        exec('sudo chmod 777 storage -R');
-        exec('sudo chmod 777 database');
-        exec('sudo chmod 777 database/opengrc.sqlite');
-        exec('sudo chmod 777 node_modules/.bin/*');
+        if (PHP_OS=="Linux") {
+            $this->info('Setting filesystem permissions');
+            exec('find . -type f -print0 | xargs --null sudo chmod 666');
+            exec('find . -type d -print0 | xargs --null sudo chmod 775');
+            exec('sudo chmod 777 set_permissions');
+            exec('sudo chmod 777 artisan');
+            exec('sudo chmod 777 artisan');
+            exec('sudo chmod 777 install.sh');
+            exec('sudo chmod 777 vendor/bin/*');
+            exec('sudo chmod 777 storage -R');
+            exec('sudo chmod 777 database');
+            exec('sudo chmod 777 database/opengrc.sqlite');
+            exec('sudo chmod 777 node_modules/.bin/*');
+        }
 
         $this->warn('Change the file system permissions for least privilege based on your own system.');
 

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->foreignId('program_manager_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('program_manager_id')->nullable()->constrained('users')->nullOnDelete();
             $table->date('last_audit_date')->nullable();
             $table->string('scope_status');
             $table->timestamps();
