@@ -19,8 +19,10 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Log;
 
 class DataRequestResponseResource extends Resource
 {
@@ -32,6 +34,8 @@ class DataRequestResponseResource extends Resource
 
     public static function form(Form $form): Form
     {
+    //    dd(config(key: 'filesystems'));
+
         return $form
             ->schema([
                 Section::make('Evidence Requested')
@@ -79,15 +83,20 @@ class DataRequestResponseResource extends Resource
                                 FileUpload::make('file_path')
                                     ->label('File')
                                     ->preserveFilenames()
-                                    ->disk('private')
-                                    ->directory(function () {
-                                        return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
-                                    })
+                                    ->disk(config('filesystems.default'))
+                                    ->directory('data-request-attachments')
                                     ->storeFileNamesIn('file_name')
                                     ->visibility('private')
+                                    ->downloadable()
                                     ->openable()
                                     ->deletable()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->maxSize(10240) // 10MB max
+                                    ->deleteUploadedFileUsing(function ($state) {
+                                        if ($state) {
+                                            Storage::disk(config('filesystems.default'))->delete($state);
+                                        }
+                                    }),
 
                                 Hidden::make('uploaded_by')
                                     ->default(Auth::id()),
