@@ -39,10 +39,18 @@ class ControlsRelationManager extends RelationManager
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'This should be a succinct description of the control.'),
                 Forms\Components\RichEditor::make('description')
                     ->required()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Describe the control in detail.')
                     ->columnSpanFull(),
                 Forms\Components\RichEditor::make('discussion')
                     ->columnSpanFull()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Provide any explanation, discussion, context, or relevant information to help someone understand the intent of this control.'),
             ]);
     }
@@ -53,7 +61,7 @@ class ControlsRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('code')
-                ->sortable(),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->wrap()
                     ->html()

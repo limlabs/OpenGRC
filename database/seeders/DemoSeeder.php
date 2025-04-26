@@ -21,10 +21,9 @@ use Illuminate\Support\Facades\DB;
 
 class DemoSeeder extends Seeder
 {
-
     private Faker $faker;
 
-    //constructor
+    // constructor
     public function __construct()
     {
         $this->faker = FakerFactory::create();
@@ -36,7 +35,7 @@ class DemoSeeder extends Seeder
     public function run(): void
     {
 
-        //Create 10 users from factory
+        // Create 10 users from factory
         \App\Models\User::factory(10)->create();
 
         $standard = Standard::create([
@@ -291,14 +290,14 @@ class DemoSeeder extends Seeder
                     'auditor_notes' => 'Audit performed on this standard.',
                     'status' => array_rand([WorkflowStatus::COMPLETED->value => WorkflowStatus::COMPLETED, WorkflowStatus::INPROGRESS->value => WorkflowStatus::INPROGRESS, WorkflowStatus::NOTSTARTED->value => WorkflowStatus::NOTSTARTED], 1),
                     'effectiveness' => array_rand([Effectiveness::EFFECTIVE->value => Effectiveness::EFFECTIVE, Effectiveness::PARTIAL->value => Effectiveness::PARTIAL, Effectiveness::INEFFECTIVE->value => Effectiveness::INEFFECTIVE, Effectiveness::UNKNOWN->value => Effectiveness::UNKNOWN], 1),
-                    'applicability' => array_rand([Applicability::UNKNOWN->value => Applicability::UNKNOWN, Applicability::NOTAPPLICABLE->value => Applicability::NOTAPPLICABLE, Applicability::APPLICABLE->value => Applicability::APPLICABLE], 1),
+                    'applicability' => array_rand([Applicability::NOTAPPLICABLE->value => Applicability::UNKNOWN, Applicability::NOTAPPLICABLE->value => Applicability::NOTAPPLICABLE, Applicability::APPLICABLE->value => Applicability::APPLICABLE], 1),
                     'auditable_type' => Control::class,
                     'auditable_id' => $ctl->id,
                 ]
             );
             $audit_item->save();
 
-            //Create a data request and a data request response for each control.
+            // Create a data request and a data request response for each control.
             $dataRequest = \App\Models\DataRequest::create([
                 'created_by_id' => 1,
                 'assigned_to_id' => rand(1, 10),
@@ -308,7 +307,7 @@ class DemoSeeder extends Seeder
                 'details' => 'Please provide evidence of the implementation of this control',
             ]);
 
-            //Create a data request response for the $dataRequest and assign to a random user
+            // Create a data request response for the $dataRequest and assign to a random user
             \App\Models\DataRequestResponse::create([
                 'requester_id' => 1,
                 'requestee_id' => rand(1, 10),
@@ -318,14 +317,11 @@ class DemoSeeder extends Seeder
 
         }
 
-        //Close the Audit
+        // Close the Audit
         AuditResource::completeAudit($audit);
 
-        //Create 10 risks from factory
+        // Create 10 risks from factory
         Risk::factory(10)->create();
 
-
     }
-
-
 }

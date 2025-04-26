@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\ResponseStatus;
 use App\Filament\Resources\DataRequestResource\Pages;
-use App\Http\Controllers\HelperController;
 use App\Models\Audit;
 use App\Models\DataRequest;
 use App\Models\User;
@@ -19,6 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 
 class DataRequestResource extends Resource
@@ -57,6 +57,10 @@ class DataRequestResource extends Resource
                     ->default(ResponseStatus::PENDING)
                     ->required(),
                 Forms\Components\RichEditor::make('details')
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->required()
                     ->columnSpanFull(),
             ]);
@@ -192,11 +196,28 @@ class DataRequestResource extends Resource
                                         </thead>
                                         <tbody class='bg-white divide-y divide-gray-200'>";
                                         if ($record) {
-                                            foreach (json_decode($record->attachments, true) as $attachment) {
-                                                $signedUrl = URL::signedRoute('priv-storage', ['filepath' => $attachment['file_path']]);
+                                            foreach ($record->attachments as $attachment) {
+                                                $storage = Storage::disk(config('filesystems.default'));
+                                                $downloadUrl = null;
+                                                
+                                                if ($storage->exists($attachment->file_path)) {
+                                                    $driver = config('filesystems.default');
+                                                    if (in_array($driver, ['s3', 'minio'])) {
+                                                        $downloadUrl = $storage->temporaryUrl($attachment->file_path, now()->addMinutes(5));
+                                                    } else {
+                                                        $downloadUrl = $storage->url($attachment->file_path);
+                                                    }
+                                                }
+                                                
                                                 $output .= "<tr>
-                                                <td class='px-6 py-4 whitespace-nowrap w-auto'><a href='$signedUrl' class='text-indigo-600 hover:text-indigo-900'>{$attachment['file_name']}</a></td>
-                                                <td class='px-6 py-4 whitespace-nowrap'>{$attachment['description']}</td>
+                                                <td class='px-6 py-4 whitespace-nowrap w-auto'>";
+                                                if ($downloadUrl) {
+                                                    $output .= "<a href='{$downloadUrl}' class='text-indigo-600 hover:text-indigo-900' target='_blank'>{$attachment->file_name}</a>";
+                                                } else {
+                                                    $output .= "<span class='text-gray-400'>{$attachment->file_name} (not available)</span>";
+                                                }
+                                                $output .= "</td>
+                                                <td class='px-6 py-4 whitespace-nowrap'>{$attachment->description}</td>
                                             </tr>";
                                             }
                                         }

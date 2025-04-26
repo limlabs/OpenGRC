@@ -16,12 +16,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class RiskResource extends Resource
 {
-
     protected static ?string $model = Risk::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-fire';
 
-    protected static ?string $navigationLabel = 'Risk Management';
+    protected static ?string $navigationLabel = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('risk-management.navigation_label');
+    }
 
     public static function form(Form $form): Form
     {

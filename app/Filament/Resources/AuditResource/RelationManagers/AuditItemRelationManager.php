@@ -62,13 +62,17 @@ class AuditItemRelationManager extends RelationManager
                             ->grouped(),
                         RichEditor::make('auditor_notes')
                             ->columnSpanFull()
+                            ->disableToolbarButtons([
+                                'image',
+                                'attachFiles'
+                            ])
                             ->label('Auditor Notes'),
                     ]),
 
                 Forms\Components\Section::make('Audit Evidence')
                     ->schema([
 
-                        //Todo: This can be replaced with a Repeater component when nested relationships are
+                        // Todo: This can be replaced with a Repeater component when nested relationships are
                         // supported in Filament - potentially in v4.x
                         Placeholder::make('control.implementations')
                             ->label('Documented Implementations')

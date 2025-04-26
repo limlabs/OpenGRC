@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\ServiceProvider;
 use Schema;
-use App\Models\Audit;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,18 +49,67 @@ class AppServiceProvider extends ServiceProvider
                     ],
                 ]));
 
+                // Configure filesystem based on settings
+                $storageDriver = setting('storage.driver', 'private');
+
+                // Ensure local disk is always configured
+                config()->set('filesystems.disks.local', array_merge(config('filesystems.disks.local', []), [
+                    'driver' => 'private',
+                    'root' => storage_path('app'),
+                    'throw' => false,
+                ]));
+
+                if ($storageDriver === 's3') {
+                    $s3Key = setting('storage.s3.key');
+                    $s3Secret = setting('storage.s3.secret');
+
+                    // Decrypt credentials if they exist and are encrypted
+                    try {
+                        if (!empty($s3Key)) {
+                            $s3Key = Crypt::decryptString($s3Key);
+                        }
+                        if (!empty($s3Secret)) {
+                            $s3Secret = Crypt::decryptString($s3Secret);
+                        }
+                    } catch (\Exception $e) {
+                        // If decryption fails, log it but don't expose the error
+                        \Log::error('Failed to decrypt S3 credentials: ' . $e->getMessage());
+                        // Fall back to local storage if S3 credentials can't be decrypted
+                        $storageDriver = 'private';
+                    }
+
+                    if ($storageDriver === 's3') {
+                        config()->set('filesystems.disks.s3', array_merge(config('filesystems.disks.s3', []), [
+                            'driver' => 's3',
+                            'key' => $s3Key,
+                            'secret' => $s3Secret,
+                            'region' => setting('storage.s3.region', 'us-east-1'),
+                            'bucket' => setting('storage.s3.bucket'),
+                            'use_path_style_endpoint' => false,
+                        ]));
+                    }
+                }
+
+                // Set the default filesystem driver
+                config()->set('filesystems.default', $storageDriver);
+
                 // Set session lifetime from settings
                 Config::set('session.lifetime', setting('security.session_timeout', 15));
             } else {
                 // if table "settings" does not exist
                 // Error that app was not installed properly
-                abort(500, "OpenGRC was not installed properly. Please review the
-                installation guide at https://docs.opengrc.com to install the app.");
+                abort(500, 'OpenGRC was not installed properly. Please review the
+                installation guide at https://docs.opengrc.com to install the app.');
             }
         }
 
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true : null;
+        });
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['en','es','fr','hr']); 
         });
 
         FilamentColor::register([

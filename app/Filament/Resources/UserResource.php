@@ -26,9 +26,21 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationLabel = null;
+
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 10;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.resources.user');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('navigation.groups.settings');
+    }
 
     public static function form(Form $form): Form
     {
@@ -75,7 +87,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('last_activity')
                     ->dateTime()
                     ->sortable(),
-                //Roles
+                // Roles
                 Tables\Columns\TextColumn::make('roles')
                     ->searchable()
                     ->label('Roles')

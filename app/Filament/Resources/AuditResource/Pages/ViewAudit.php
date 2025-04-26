@@ -2,11 +2,9 @@
 
 namespace App\Filament\Resources\AuditResource\Pages;
 
-use App\Enums\Effectiveness;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource;
 use App\Models\Audit;
-use App\Models\Control;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -14,6 +12,7 @@ use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\ActionSize;
+use Illuminate\Support\Facades\Storage;
 
 class ViewAudit extends ViewRecord
 {
@@ -156,9 +155,18 @@ class ViewAudit extends ViewRecord
                     })
                     ->action(function (Audit $audit, $livewire) {
                         if ($audit->status == WorkflowStatus::COMPLETED) {
-                            $filepath = "app/private/audit_reports/AuditReport-{$this->record->id}.pdf";
-                            if (file_exists(storage_path($filepath)) && is_readable(storage_path($filepath))) {
-                                return response()->download(storage_path($filepath));
+                            $filepath = "audit_reports/AuditReport-{$this->record->id}.pdf";
+                            $storage = Storage::disk(config('filesystems.default'));
+                            
+                            if ($storage->exists($filepath)) {
+                                $fileContents = $storage->get($filepath);
+                                return response()->streamDownload(
+                                    function () use ($fileContents) {
+                                        echo $fileContents;
+                                    },
+                                    "AuditReport-{$audit->id}.pdf",
+                                    ['Content-Type' => 'application/pdf']
+                                );
                             } else {
                                 return Notification::make()
                                     ->title('Error')
@@ -175,8 +183,12 @@ class ViewAudit extends ViewRecord
                             $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
 
                             return response()->streamDownload(
-                                fn () => print ($pdf->stream()),
-                                "DRAFT-AuditReport-{$audit->id}.pdf");
+                                function () use ($pdf) {
+                                    echo $pdf->output();
+                                },
+                                "DRAFT-AuditReport-{$audit->id}.pdf",
+                                ['Content-Type' => 'application/pdf']
+                            );
                         }
                     }
                     ),
