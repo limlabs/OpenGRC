@@ -98,6 +98,10 @@ class StandardResource extends Resource
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('standard.form.reference_url.tooltip')),
                 RichEditor::make('description')
                     ->columnSpanFull()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->maxLength(65535)
                     ->required()
                     ->hint(__('standard.form.description.hint'))
@@ -154,6 +158,7 @@ class StandardResource extends Resource
                 Tables\Filters\SelectFilter::make('authority')
                     ->options(Standard::pluck('authority', 'authority')->toArray())
                     ->label(__('standard.table.filters.authority')),
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->hiddenLabel(),
