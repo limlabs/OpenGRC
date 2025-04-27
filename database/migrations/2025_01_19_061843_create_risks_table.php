@@ -36,6 +36,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('program_risk', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('risk_id')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -45,5 +51,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('risks');
         Schema::dropIfExists('implementation_risk');
+        Schema::dropIfExists('program_risk');
     }
 };
