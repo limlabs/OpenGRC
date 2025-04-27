@@ -2,29 +2,20 @@
 
 namespace App\Filament\Pages\Settings;
 
-use Closure;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
-use Illuminate\Support\Facades\Crypt;
-use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
+use App\Filament\Pages\Settings\Schemas\AiSchema;
+use App\Filament\Pages\Settings\Schemas\AuthenticationSchema;
 use App\Filament\Pages\Settings\Schemas\GeneralSchema;
 use App\Filament\Pages\Settings\Schemas\MailSchema;
 use App\Filament\Pages\Settings\Schemas\MailTemplatesSchema;
-use App\Filament\Pages\Settings\Schemas\AiSchema;
 use App\Filament\Pages\Settings\Schemas\ReportSchema;
 use App\Filament\Pages\Settings\Schemas\SecuritySchema;
-use App\Filament\Pages\Settings\Schemas\AuthenticationSchema;
+use Closure;
+use Filament\Forms\Components\Tabs;
+use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
 class Settings extends BaseSettings
 {
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 1;
 
@@ -37,9 +28,14 @@ class Settings extends BaseSettings
         return false;
     }
 
+    public static function getNavigationGroup(): string
+    {
+        return __('navigation.groups.settings');
+    }
+
     public static function getNavigationLabel(): string
     {
-        return 'General Settings';
+        return __('navigation.settings.general_settings');
     }
 
     public function schema(): array|Closure
@@ -48,21 +44,20 @@ class Settings extends BaseSettings
             Tabs::make('Settings')
                 ->columns(2)
                 ->schema([
-                    Tabs\Tab::make('General')
+                    Tabs\Tab::make(__('navigation.settings.tabs.general'))
                         ->schema(GeneralSchema::schema()),
-                    Tabs\Tab::make('Mail')
+                    Tabs\Tab::make(__('navigation.settings.tabs.mail'))
                         ->columns(3)
-                        ->label('Mail Settings')
                         ->schema(MailSchema::schema()),
-                    Tabs\Tab::make('Mail Templates')
+                    Tabs\Tab::make(__('navigation.settings.tabs.mail_templates'))
                         ->schema(MailTemplatesSchema::schema()),
-                    Tabs\Tab::make('AI Settings')
+                    Tabs\Tab::make(__('navigation.settings.tabs.ai'))
                         ->schema(AiSchema::schema()),
-                    Tabs\Tab::make('Report Settings')
+                    Tabs\Tab::make(__('navigation.settings.tabs.report'))
                         ->schema(ReportSchema::schema()),
-                    Tabs\Tab::make('Security')
+                    Tabs\Tab::make(__('navigation.settings.tabs.security'))
                         ->schema(SecuritySchema::schema()),
-                    Tabs\Tab::make('Authentication')
+                    Tabs\Tab::make(__('navigation.settings.tabs.authentication'))
                         ->schema(AuthenticationSchema::schema()),
                 ]),
         ];

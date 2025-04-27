@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Settings;
+use App\Models\User;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -20,16 +23,14 @@ use Jeffgreco13\FilamentBreezy\BreezyCore;
 use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
-use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
-use App\Models\User;
-use App\Models\Settings;
+
 
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         $socialProviders = [];
-        
+
         // Comment out or wrap all settings() calls in try-catch
         try {
             if (setting('auth.okta.enabled')) {
@@ -39,7 +40,7 @@ class AppPanelProvider extends PanelProvider
                     'color' => 'primary',
                 ];
             }
-            
+
             if (setting('auth.microsoft.enabled')) {
                 $socialProviders['microsoft'] = [
                     'label' => 'Microsoft',
@@ -47,7 +48,7 @@ class AppPanelProvider extends PanelProvider
                     'color' => 'primary',
                 ];
             }
-            
+
             if (setting('auth.azure.enabled')) {
                 $socialProviders['azure'] = [
                     'label' => 'Azure AD',
@@ -80,12 +81,12 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\Login::class)
             ->loginRouteSlug('login')
             ->colors([
                 'primary' => Color::Slate,
             ])
-            ->brandName("OpenGRC")
+            ->brandName('OpenGRC')
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->globalSearch(true)
             ->readOnlyRelationManagersOnResourceViewPagesByDefault(false)
@@ -101,9 +102,9 @@ class AppPanelProvider extends PanelProvider
                 FilamentApexChartsPlugin::make(),
                 //                FilamentTourPlugin::make(),
                 FilamentSettingsPlugin::make()
-                    ->pages([
-                        \App\Filament\Pages\Settings\Settings::class,
-                    ]),
+                ->pages([
+                    \App\Filament\Pages\Settings\Settings::class,
+                ]),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,
@@ -137,6 +138,8 @@ class AppPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \App\Http\Middleware\UserActivityMonitor::class,
+                \App\Http\Middleware\SessionTimeout::class,
             ])
             ->authGuard('web')
             ->authMiddleware([

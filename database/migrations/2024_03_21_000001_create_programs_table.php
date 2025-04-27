@@ -39,4 +39,4 @@ return new class extends Migration
         Schema::dropIfExists('program_standard');
         Schema::dropIfExists('programs');
     }
-}; 
+};

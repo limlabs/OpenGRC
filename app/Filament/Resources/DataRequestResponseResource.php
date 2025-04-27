@@ -19,8 +19,10 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Log;
 
 class DataRequestResponseResource extends Resource
 {
@@ -32,6 +34,8 @@ class DataRequestResponseResource extends Resource
 
     public static function form(Form $form): Form
     {
+    //    dd(config(key: 'filesystems'));
+
         return $form
             ->schema([
                 Section::make('Evidence Requested')
@@ -48,7 +52,7 @@ class DataRequestResponseResource extends Resource
                                 return $record->dataRequest->auditItem->auditable->title ?? 'No audit name available';
                             })
                             ->label(function ($record) {
-                                return $record->dataRequest->auditItem->auditable_type === 'App\Models\Control' ? 'Control Name' : 'Implementation Name';
+                                return $record->dataRequest->auditItem->auditable_type === \App\Models\Control::class ? 'Control Name' : 'Implementation Name';
                             }),
                         Placeholder::make('request.dataRequest.auditItem.audit.description')
                             ->content(function ($record) {
@@ -60,6 +64,10 @@ class DataRequestResponseResource extends Resource
                     ->columnSpanFull()
                     ->schema([
                         RichEditor::make('response')
+                            ->disableToolbarButtons([
+                                'image',
+                                'attachFiles'
+                            ])
                             ->required(function ($get, $record) {
                                 if (is_null($record)) {
                                     return false;
@@ -75,19 +83,26 @@ class DataRequestResponseResource extends Resource
                             ->columnSpanFull()
                             ->columns()
                             ->schema([
-                                Textarea::make('description'),
+                                Textarea::make('description')                                    
+                                    ->required(),
                                 FileUpload::make('file_path')
                                     ->label('File')
+                                    ->required()
                                     ->preserveFilenames()
-                                    ->disk('private')
-                                    ->directory(function () {
-                                        return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
-                                    })
+                                    ->disk(config('filesystems.default'))
+                                    ->directory('data-request-attachments')
                                     ->storeFileNamesIn('file_name')
                                     ->visibility('private')
+                                    ->downloadable()
                                     ->openable()
                                     ->deletable()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->maxSize(10240) // 10MB max
+                                    ->deleteUploadedFileUsing(function ($state) {
+                                        if ($state) {
+                                            Storage::disk(config('filesystems.default'))->delete($state);
+                                        }
+                                    }),
 
                                 Hidden::make('uploaded_by')
                                     ->default(Auth::id()),

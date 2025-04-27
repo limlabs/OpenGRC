@@ -31,9 +31,21 @@ class ImplementationResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static ?string $navigationGroup = 'Foundations';
+    protected static ?string $navigationLabel = null;
+
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 30;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('implementation.navigation.label');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('implementation.navigation.group');
+    }
 
     public static function form(Form $form): Form
     {
@@ -77,12 +89,20 @@ class ImplementationResource extends Resource
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a title for this implementation.'),
                 Forms\Components\RichEditor::make('details')
                     ->required()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->maxLength(65535)
                     ->columnSpanFull()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a description for this implementation. This be an in-depth description of how this implementation is put in place.'),
 
                 Forms\Components\RichEditor::make('notes')
                     ->maxLength(65535)
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->columnSpanFull()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Any additional internal notes. This is never visible to an auditor.'),
 
@@ -95,50 +115,50 @@ class ImplementationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable
+            {
                 public function toHtml()
                 {
-                    return "<div class='fi-section-content p-6'>
-                        Implementations represent the actual deployment and operation of security controls within an organization. 
-                        They are the specific instances of how controls are put into practice, including the tools, configurations, 
-                        processes, and procedures used. Each implementation should be documented with sufficient detail to understand 
-                        how the control is operating, who is responsible for maintaining it, and how its effectiveness can be verified. 
-                        For example, while a control might specify the need for access reviews, an implementation would detail the 
-                        exact process, including which tool is used, who conducts the reviews, how often they occur, and what 
-                        documentation is maintained. Implementations bridge the gap between theoretical security controls and their 
-                        practical application in the organization.
-                        </div>";
+                    return "<div class='fi-section-content p-6'>" . 
+                        __('implementation.table.description') . 
+                        "</div>";
                 }
             })
-            ->emptyStateHeading('No implementations found')
-            ->emptyStateDescription('Try creating a new implementation by clicking the "Create Implementation" button above.')
+            ->emptyStateHeading(__('implementation.table.empty_state.heading'))
+            ->emptyStateDescription(__('implementation.table.empty_state.description'))
             ->columns([
                 Tables\Columns\TextColumn::make('code')
+                    ->label(__('implementation.table.columns.code'))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('implementation.table.columns.title'))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('effectiveness')
-                    ->getStateUsing(fn($record) => $record->getEffectiveness())
+                    ->label(__('implementation.table.columns.effectiveness'))
+                    ->getStateUsing(fn ($record) => $record->getEffectiveness())
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
-                    ->label('Last Audit')
-                    ->getStateUsing(fn($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    ->label(__('implementation.table.columns.last_assessed'))
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('implementation.table.columns.status'))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('implementation.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('implementation.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -148,7 +168,7 @@ class ImplementationResource extends Resource
                 SelectFilter::make('effectiveness')
                     ->options(Effectiveness::class)
                     ->query(function (Builder $query, array $data) {
-                        if (!isset($data['value'])) {
+                        if (! isset($data['value'])) {
                             return $query;
                         }
 
@@ -159,7 +179,7 @@ class ImplementationResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-//                Tables\Actions\EditAction::make(),
+                //                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -178,10 +198,10 @@ class ImplementationResource extends Resource
                     ->schema([
                         TextEntry::make('code')
                             ->columnSpan(2)
-                            ->getStateUsing(fn($record) => "$record->code - $record->title")
+                            ->getStateUsing(fn ($record) => "$record->code - $record->title")
                             ->label('Title'),
                         TextEntry::make('effectiveness')
-                            ->getStateUsing(fn($record) => $record->getEffectiveness())
+                            ->getStateUsing(fn ($record) => $record->getEffectiveness())
                             ->badge(),
                         TextEntry::make('status')->badge(),
                         TextEntry::make('details')
@@ -223,7 +243,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param Implementation $record
+     * @param  Implementation  $record
      */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
@@ -231,7 +251,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param Implementation $record
+     * @param  Implementation  $record
      */
     public static function getGlobalSearchResultUrl(Model $record): string
     {
@@ -239,7 +259,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param Implementation $record
+     * @param  Implementation  $record
      */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
@@ -278,17 +298,24 @@ class ImplementationResource extends Resource
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'This should be a detailed description of this implementation in sufficient detail to both implement and test.'),
                 Forms\Components\RichEditor::make('details')
                     ->columnSpanFull()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->label('Implementation Details')
                     ->required()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'This should be a detailed description of this implementation in sufficient detail to both implement and test.'),
                 Forms\Components\RichEditor::make('notes')
                     ->columnSpanFull()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->label('Internal Notes')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'These notes are for internal use only and will not be shared with auditors.')
                     ->maxLength(4096),
             ]);
     }
-
 
     public static function getTable(Table $table): Table
     {
@@ -310,7 +337,7 @@ class ImplementationResource extends Resource
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
-                    ->getStateUsing(fn($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
                     ->toggleable()
@@ -330,7 +357,7 @@ class ImplementationResource extends Resource
                 SelectFilter::make('effectiveness')
                     ->options(Effectiveness::class)
                     ->query(function (Builder $query, array $data) {
-                        if (!isset($data['value'])) {
+                        if (! isset($data['value'])) {
                             return $query;
                         }
 
@@ -351,5 +378,4 @@ class ImplementationResource extends Resource
                 ]),
             ]);
     }
-
 }

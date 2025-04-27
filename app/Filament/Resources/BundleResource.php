@@ -22,9 +22,21 @@ class BundleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-on-square-stack';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationLabel = null;
+
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 5;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.resources.bundle');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('navigation.groups.settings');
+    }
 
     /**
      * @throws \Exception
@@ -36,11 +48,9 @@ class BundleResource extends Resource
                 Grid::make()
                     ->columns(3)
                     ->schema([
-                        Tables\Columns\TextColumn::make('na')
-                            ->state(function () {
-                                return new HtmlString('
-                                        <h3 class="font-bold text-lg">Standard</h3>
-                                ');
+                        Tables\Columns\TextColumn::make('type')
+                            ->state(function (Bundle $record) {
+                                return new HtmlString("<h3 class='font-bold text-lg'>$record->type</h3>");
                             })
                             ->badge()
                             ->columnSpanFull()
@@ -134,6 +144,12 @@ class BundleResource extends Resource
                 Tables\Filters\SelectFilter::make('authority')
                     ->options(Bundle::pluck('authority', 'authority')->toArray())
                     ->label('Authority'),
+                Tables\Filters\SelectFilter::make('type')
+                    ->options([
+                        'Standard' => 'Standard',
+                        'Supplemental' => 'Supplemental',
+                    ])
+                    ->label('Type'),
             ])
             ->emptyStateHeading(new HtmlString('No Bundles Imported'))
             ->emptyStateDescription(new HtmlString('Try fetching the latest bundles from the OpenGRC repository by clicking "Fetch Bundle Updates" above.'));

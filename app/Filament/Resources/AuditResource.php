@@ -21,6 +21,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 
 class AuditResource extends Resource
 {
@@ -30,9 +31,21 @@ class AuditResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
 
-    protected static ?string $navigationGroup = 'Foundations';
+    protected static ?string $navigationLabel = null;
+
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 40;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('audit.navigation.label');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('audit.navigation.group');
+    }
 
     public static function form(Form $form): Form
     {
@@ -42,35 +55,42 @@ class AuditResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('No Audits Created')
-            ->emptyStateDescription('Try creating a new audit by clicking the "Create an Audit" button above to get started!')
+            ->emptyStateHeading(__('audit.table.empty_state.heading'))
+            ->emptyStateDescription(__('audit.table.empty_state.description'))
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('audit.table.columns.title'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('audit_type')
+                    ->label(__('audit.table.columns.audit_type'))
                     ->sortable()
-                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('audit.table.columns.status'))
                     ->sortable()
                     ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('manager.name')
-                    ->label('Manager')
+                    ->label(__('audit.table.columns.manager'))
                     ->default('Unassigned')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
+                    ->label(__('audit.table.columns.start_date'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
+                    ->label(__('audit.table.columns.end_date'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('audit.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('audit.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -104,15 +124,20 @@ class AuditResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Audit Details')
+                Section::make(__('audit.infolist.section.title'))
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('title'),
+                        TextEntry::make('title')
+                            ->label(__('audit.table.columns.title')),
                         TextEntry::make('status')
+                            ->label(__('audit.table.columns.status'))
                             ->badge(),
-                        TextEntry::make('manager.name'),
-                        TextEntry::make('start_date'),
-                        TextEntry::make('end_date'),
+                        TextEntry::make('manager.name')
+                            ->label(__('audit.table.columns.manager')),
+                        TextEntry::make('start_date')
+                            ->label(__('audit.table.columns.start_date')),
+                        TextEntry::make('end_date')
+                            ->label(__('audit.table.columns.end_date')),
                         TextEntry::make('description')
                             ->columnSpanFull()
                             ->html(),
@@ -122,7 +147,7 @@ class AuditResource extends Resource
 
     public static function getRelations(): array
     {
-        if (!request()->routeIs('filament.app.resources.audits.edit')) {
+        if (! request()->routeIs('filament.app.resources.audits.edit')) {
             return [
                 RelationManagers\AuditItemRelationManager::class,
                 RelationManagers\DataRequestsRelationManager::class,
@@ -170,7 +195,7 @@ class AuditResource extends Resource
 
                 $updateData = ['effectiveness' => $auditItem->effectiveness->value];
 
-                if ($auditItem->auditable_type == 'App\Models\Control') {
+                if ($auditItem->auditable_type == \App\Models\Control::class) {
                     $updateData['applicability'] = $auditItem->applicability->value;
                 }
 
@@ -184,9 +209,11 @@ class AuditResource extends Resource
         if ($audit->audit_type == 'implementations') {
             $reportTemplate = 'reports.implementation-report';
         }
-        $filepath = "app/private/audit_reports/AuditReport-{$audit->id}.pdf";
+        $filepath = "audit_reports/AuditReport-{$audit->id}.pdf";
         $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
-        $pdf->save(storage_path($filepath));
+        Storage::disk(config('filesystems.default'))->put($filepath, $pdf->output(), [
+            'visibility' => 'private'
+        ]);
 
         // Mark the audit as completed
         $audit->update(['status' => WorkflowStatus::COMPLETED]);
