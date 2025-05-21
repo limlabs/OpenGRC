@@ -17,7 +17,7 @@ class AuditStatsWidget extends BaseWidget
         return [
             Stat::make('Total Audits', $totalAudited),
             Stat::make('In Progress', $totalInProgress),
-            Stat::make('Complete', $totalCompleted),
+            Stat::make('Completed', $totalCompleted),
         ];
     }
 }
