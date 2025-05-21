@@ -31,12 +31,20 @@ return new class extends Migration
             $table->foreignId('control_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
+
+        Schema::create('program_risk', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('risk_id')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
     }
 
     public function down(): void
     {
         Schema::dropIfExists('control_program');
         Schema::dropIfExists('program_standard');
+        Schema::dropIfExists('program_risk');
         Schema::dropIfExists('programs');
     }
 };
