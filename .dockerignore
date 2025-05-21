@@ -3,4 +3,3 @@ public/build
 vendor
 .env
 .DS_Store
-Dockerfile
